@@ -98,10 +98,18 @@ body { font-family: 'Noto Sans TC', sans-serif; background: var(--cream-lt); col
 #story .in   { max-width: 440px; margin: 0 auto; }
 .s-title     { font-size: 17px; font-weight: 700; color: var(--txt); margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
 .s-text      { font-size: 14px; color: var(--txt-mid); line-height: 2.1; margin-bottom: 24px; }
-.photo-grid  { display: grid; grid-template-columns: 2fr 1fr; grid-template-rows: 1fr 1fr; gap: 7px; height: 340px; }
-.ph-main     { grid-row: 1 / 3; border-radius: 10px; overflow: hidden; background: linear-gradient(135deg, #C4B5A5, #8B7060); display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,.35); font-size: 30px; }
-.ph-thumb    { border-radius: 10px; overflow: hidden; background: linear-gradient(135deg, #B8A898, #7A6050); display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,.35); font-size: 22px; }
-.ph-main img, .ph-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.carousel    { position: relative; border-radius: 14px; overflow: hidden; aspect-ratio: 4/5; background: #C4B5A5; user-select: none; }
+.car-track   { display: flex; height: 100%; transition: transform .42s cubic-bezier(.4,0,.2,1); will-change: transform; }
+.car-slide   { flex: 0 0 100%; height: 100%; }
+.car-ph      { width: 100%; height: 100%; background: linear-gradient(135deg, #C4B5A5, #8B7060); display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,.35); font-size: 48px; }
+.car-slide img { width: 100%; height: 100%; object-fit: cover; display: block; pointer-events: none; }
+.car-dots    { position: absolute; bottom: 14px; left: 50%; transform: translateX(-50%); display: flex; gap: 7px; }
+.car-dot     { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,.5); cursor: pointer; transition: background .2s, transform .2s; }
+.car-dot.on  { background: #fff; transform: scale(1.35); }
+.car-btn     { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(255,255,255,.22); backdrop-filter: blur(4px); border: none; color: #fff; width: 36px; height: 36px; border-radius: 50%; font-size: 22px; line-height: 1; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background .2s; }
+.car-btn:hover { background: rgba(255,255,255,.42); }
+.car-prev    { left: 12px; }
+.car-next    { right: 12px; }
 .photo-credit { font-size: 11px; color: #C0B0A0; text-align: center; margin-top: 10px; letter-spacing: 1px; }
 
 /* ── SCHEDULE ── */
@@ -239,9 +247,9 @@ footer   { background: var(--br); padding: 24px 20px; text-align: center; }
     <div class="div-w rv d4"></div>
     <div class="host-lbl rv d4">主婚人</div>
     <div class="host-tbl rv d5">
-      <div class="host-col">[男方父]<br>[男方母]</div>
-      <div class="host-sep"></div>
       <div class="host-col">[女方父]<br>[女方母]</div>
+      <div class="host-sep"></div>
+      <div class="host-col">[男方父]<br>[男方母]</div>
     </div>
     <div class="w-invite rv d6">敬邀</div>
   </div>
@@ -252,10 +260,16 @@ footer   { background: var(--br); padding: 24px 20px; text-align: center; }
   <div class="in">
     <div class="s-title rv">💍 是的，我們結婚了 🏠</div>
     <div class="s-text rv d1">在這意義重大的日子<br>衷心希望能有您的蒞臨參與 ❤️</div>
-    <div class="photo-grid rv d2">
-      <div class="ph-main">📷</div>
-      <div class="ph-thumb">📷</div>
-      <div class="ph-thumb">📷</div>
+    <div class="carousel rv d2" id="photoCarousel">
+      <div class="car-track" id="carTrack">
+        <!-- 替換 src 為實際婚紗照路徑，可新增或刪除 car-slide -->
+        <div class="car-slide"><div class="car-ph">📷</div></div>
+        <div class="car-slide"><div class="car-ph">📷</div></div>
+        <div class="car-slide"><div class="car-ph">📷</div></div>
+      </div>
+      <div class="car-dots" id="carDots"></div>
+      <button class="car-btn car-prev" onclick="carMove(-1)">&#8249;</button>
+      <button class="car-btn car-next" onclick="carMove(1)">&#8250;</button>
     </div>
     <div class="photo-credit rv d3">photo by GoodLuck image</div>
   </div>
@@ -295,23 +309,50 @@ footer   { background: var(--br); padding: 24px 20px; text-align: center; }
 <section id="transport">
   <div class="in">
     <div class="sec-title rv">交通方式</div>
+    <div style="font-size:13px;color:rgba(255,255,255,.7);letter-spacing:1px;margin-bottom:28px;line-height:1.8" class="rv">
+      📍 新北市板橋區中山路一段161號 1F &amp; 8F<br>
+      <span style="color:rgba(255,255,255,.45);font-size:12px">（新北市政府內）電話：02-2952-7666</span>
+    </div>
+
     <div class="trans-item rv d1">
-      <div class="trans-title">台鐵・高鐵</div>
+      <div class="trans-title">捷運</div>
       <ul class="trans-list">
-        <li>永靖火車站搭計程車約 7min</li>
-        <li>彰化高鐵站搭計程車約 14min</li>
+        <li>板南線 / 板橋站　2 號出口</li>
+        <li>板南線 / 板橋站　3A 出口（由地下道前往市府）</li>
+        <li>環狀線 / 板橋站　4 號出口</li>
       </ul>
     </div>
+
     <div class="trans-item rv d2">
-      <div class="trans-title">自行開車</div>
+      <div class="trans-title">火車</div>
       <ul class="trans-list">
-        <li>可點擊下方地圖直接導航</li>
-        <li>可直接進入停車場免費停車</li>
+        <li>板橋車站下車，步行約 5 分鐘</li>
       </ul>
     </div>
-    <div class="map-box rv d3">
-      <!-- 填入正確地址後將下方 div 換成 iframe -->
-      <div class="map-ph">📍 請填入婚宴地址後啟用地圖</div>
+
+    <div class="trans-item rv d3">
+      <div class="trans-title">公車</div>
+      <ul class="trans-list">
+        <li>板橋公車站下車，步行約 3 分鐘</li>
+        <li style="line-height:1.9">可搭乘：51、234、245、265、307、651、667、705、810、813、813區、847、926、926副、1032、99、786、805、812、848、857、920、932、948、F501、F502、藍32、藍33、藍37、藍38、環狀線先導公車、環狀線區間車、264、310、656、701、702、793、806、910、930、2021、9103</li>
+      </ul>
+    </div>
+
+    <div class="trans-item rv d4">
+      <div class="trans-title">🅿️ 停車</div>
+      <ul class="trans-list">
+        <li>市民廣場地下停車場・歐特儀（每小時 40 元）<span style="margin-left:6px;background:var(--br-light);color:#fff;font-size:10px;padding:2px 7px;border-radius:10px;vertical-align:middle;letter-spacing:1px">館內特約</span></li>
+        <li>板橋火車站地下停車場（每小時 40 元）</li>
+        <li>特專三停車場（每小時 30 元）</li>
+        <li style="color:rgba(255,255,255,.45)">市府地下室停車場不對外使用</li>
+      </ul>
+    </div>
+
+    <div class="map-box rv d5">
+      <iframe
+        src="https://maps.google.com/maps?q=新北市板橋區中山路一段161號&output=embed&z=16"
+        allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+        title="新板彭園會館地圖"></iframe>
     </div>
   </div>
 </section>
@@ -320,9 +361,9 @@ footer   { background: var(--br); padding: 24px 20px; text-align: center; }
 <section id="venue">
   <div class="venue-bg"></div>
   <div class="venue-cnt">
-    <div class="venue-zh rv">婚宴場地</div>
-    <div class="venue-en rv d1">WEDDING VENUE</div>
-    <button class="venue-cta rv d2">查看場地</button>
+    <div class="venue-zh rv">彭園新板館</div>
+    <div class="venue-en rv d1">1 樓宴會 A 廳</div>
+    <a class="venue-cta rv d2" href="https://www.pengyuan.com.tw/branch/rooms_detail/xinban/25" target="_blank" rel="noopener">查看場地</a>
   </div>
 </section>
 
@@ -472,6 +513,36 @@ const obs = new IntersectionObserver(entries => {
 }, { threshold: 0.13, rootMargin: '0px 0px -36px 0px' });
 
 document.querySelectorAll('.rv, .rv-l, .rv-r, .rv-sc').forEach(el => obs.observe(el));
+
+// ── CAROUSEL ──
+(function() {
+  const track  = document.getElementById('carTrack');
+  const dotsEl = document.getElementById('carDots');
+  const slides = track.querySelectorAll('.car-slide');
+  let idx = 0;
+
+  slides.forEach((_, i) => {
+    const d = document.createElement('div');
+    d.className = 'car-dot' + (i === 0 ? ' on' : '');
+    d.addEventListener('click', () => carGo(i));
+    dotsEl.appendChild(d);
+  });
+
+  window.carGo = function(n) {
+    idx = ((n % slides.length) + slides.length) % slides.length;
+    track.style.transform = `translateX(-${idx * 100}%)`;
+    dotsEl.querySelectorAll('.car-dot').forEach((d, i) => d.classList.toggle('on', i === idx));
+  };
+  window.carMove = function(dir) { carGo(idx + dir); };
+
+  // Touch swipe
+  let startX = 0;
+  track.addEventListener('touchstart', e => { startX = e.touches[0].clientX; }, { passive: true });
+  track.addEventListener('touchend',   e => {
+    const dx = e.changedTouches[0].clientX - startX;
+    if (Math.abs(dx) > 40) carMove(dx < 0 ? 1 : -1);
+  });
+})();
 
 // ── TYPEFORM 邏輯 ──
 const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbygDHk9DStPmwJaklv4GM8jffvJVSsIdzjM2ydQZGKk4n_v-OgZgFpXFZboS2HREDmukw/exec';
