@@ -3,469 +3,536 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Juju & Frank 婚禮邀請</title>
-<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Caveat:wght@600&family=Noto+Sans+TC:wght@900&family=Noto+Serif+TC:wght@300;400&display=swap" rel="stylesheet">
+<title>Juju &amp; Frank 婚禮邀請</title>
+<!-- ★ 新版設計：全頁分區 + 捲動進場動畫 + Typeform 逐步問卷 ★ -->
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Noto+Sans+TC:wght@300;400;700&family=Noto+Serif+TC:wght@300;400&display=swap" rel="stylesheet">
 <style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
 
-  body {
-    min-height: 100vh;
-    background: #fdf0f4;
-    font-family: 'Noto Sans TC', sans-serif;
-    font-weight: 900;
-    display: flex;
-    align-items: flex-start;
-    justify-content: center;
-    padding: 2rem 1rem;
-  }
+:root {
+  --br:       #7B4F2E;
+  --br-mid:   #9B6540;
+  --br-light: #C4895A;
+  --cream-lt: #FAF7F2;
+  --txt:      #3A2415;
+  --txt-mid:  #7A5A40;
+  --accent:   #7B2D3E;
+}
 
-  .card-main {
-    max-width: 560px;
-    width: 100%;
-    background: linear-gradient(160deg, #fff5f7 0%, #ffffff 60%, #fff8f0 100%);
-    border: 0.5px solid #f4b8c8;
-    border-radius: 24px;
-    padding: 2.5rem 2rem;
-    position: relative;
-    overflow: hidden;
-  }
+html { scroll-behavior: smooth; }
+body { font-family: 'Noto Sans TC', sans-serif; background: var(--cream-lt); color: var(--txt); overflow-x: hidden; }
 
-  .flower-deco {
-    position: absolute;
-    opacity: 0.1;
-    font-size: 100px;
-    pointer-events: none;
-    line-height: 1;
-  }
+/* ── NAV ── */
+.nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+  background: #fff; border-top: 3px solid var(--accent);
+  padding: 11px 20px; display: flex; justify-content: space-between; align-items: center;
+  box-shadow: 0 1px 10px rgba(0,0,0,.08);
+}
+.nav-title { font-family: 'Playfair Display', serif; font-size: 15px; color: var(--txt); font-weight: 400; }
+.nav-btn {
+  background: var(--br-mid); color: #fff; border: none;
+  padding: 7px 18px; border-radius: 20px; font-size: 13px;
+  font-family: 'Noto Sans TC', sans-serif; cursor: pointer;
+  text-decoration: none; display: inline-block; transition: background .2s;
+}
+.nav-btn:hover { background: var(--br); }
 
-  .ornament {
-    text-align: center;
-    color: #e8a0b4;
-    font-size: 20px;
-    letter-spacing: 10px;
-    margin-bottom: 0.5rem;
-  }
+/* ── SCROLL REVEAL ── */
+.rv    { opacity: 0; transform: translateY(38px); transition: opacity .75s cubic-bezier(.4,0,.2,1), transform .75s cubic-bezier(.4,0,.2,1); }
+.rv-l  { opacity: 0; transform: translateX(-40px); transition: opacity .75s ease, transform .75s ease; }
+.rv-r  { opacity: 0; transform: translateX(40px);  transition: opacity .75s ease, transform .75s ease; }
+.rv-sc { opacity: 0; transform: scale(.85); transition: opacity .8s ease, transform .8s ease; }
+.rv.on, .rv-l.on, .rv-r.on, .rv-sc.on { opacity: 1; transform: none; }
+.d1 { transition-delay: .1s; } .d2 { transition-delay: .2s; }
+.d3 { transition-delay: .3s; } .d4 { transition-delay: .4s; }
+.d5 { transition-delay: .5s; } .d6 { transition-delay: .6s; }
 
-  .title-en {
-    font-family: 'Great Vibes', cursive;
-    font-style: normal;
-    font-size: 46px;
-    color: #c0607a;
-    text-align: center;
-    line-height: 1.2;
-    margin: 0.3rem 0 0;
-  }
+/* ── HERO ── */
+#hero {
+  position: relative; height: 100svh; min-height: 600px;
+  margin-top: 44px; overflow: hidden; background: #2C1E14;
+}
+.hero-bg {
+  position: absolute; inset: 0;
+  background:
+    linear-gradient(180deg, rgba(35,20,10,.15) 0%, rgba(35,20,10,.62) 75%),
+    linear-gradient(135deg, #8B7355 0%, #5A3D28 40%, #9B8060 70%, #7A5A40 100%);
+  background-size: cover; background-position: center top;
+  transform: scale(1.06); transition: transform 7s ease;
+}
+#hero.loaded .hero-bg { transform: scale(1); }
+.hero-content {
+  position: relative; z-index: 2; height: 100%;
+  display: flex; flex-direction: column; align-items: center;
+  justify-content: center; padding: 0 24px; text-align: center;
+}
+.hero-cnt { display: flex; align-items: center; margin-bottom: 30px; animation: heroUp .9s ease .15s both; }
+.h-unit { text-align: center; padding: 0 10px; }
+.h-num  { font-family: 'Playfair Display', serif; font-size: 42px; color: #fff; display: block; line-height: 1; font-weight: 400; letter-spacing: 2px; }
+.h-sep  { font-size: 30px; color: rgba(255,255,255,.55); padding-bottom: 18px; font-weight: 300; }
+.h-lbl  { font-size: 10px; color: rgba(255,255,255,.7); letter-spacing: 2px; margin-top: 6px; display: block; text-transform: uppercase; }
+.hero-names { font-family: 'Great Vibes', cursive; font-size: 68px; color: #fff; line-height: 1.1; text-shadow: 0 2px 30px rgba(0,0,0,.3); animation: heroUp .9s ease .45s both; margin-bottom: 12px; }
+.hero-date  { font-size: 13px; color: rgba(255,255,255,.85); letter-spacing: 4px; animation: heroUp .9s ease .75s both; }
+@keyframes heroUp { from { opacity: 0; transform: translateY(26px); } to { opacity: 1; transform: translateY(0); } }
 
-  .title-zh {
-    text-align: center;
-    font-size: 12px;
-    color: #d48a9e;
-    letter-spacing: 5px;
-    margin: 0.5rem 0 1.2rem;
-  }
+/* ── WELCOME ── */
+#welcome { background: var(--br); padding: 72px 24px; text-align: center; color: #fff; }
+#welcome .in { max-width: 440px; margin: 0 auto; }
+#welcome h1  { font-family: 'Playfair Display', serif; font-size: 30px; font-weight: 400; line-height: 1.45; margin-bottom: 10px; }
+.date-tag    { font-size: 13px; color: rgba(255,255,255,.7); letter-spacing: 2px; margin-bottom: 36px; }
+.rings-wrap  { display: flex; justify-content: center; margin-bottom: 26px; position: relative; }
+.arch        { position: absolute; width: 130px; height: 164px; border-radius: 65px 65px 0 0; border: 1.5px solid rgba(255,255,255,.22); top: -8px; left: 50%; transform: translateX(-50%); }
+.rings-svg   { width: 110px; height: 110px; position: relative; z-index: 1; }
+.couple-big  { font-family: 'Noto Serif TC', serif; font-size: 22px; letter-spacing: 6px; color: #fff; margin-bottom: 6px; }
+.couple-big span { color: rgba(255,255,255,.45); margin: 0 10px; font-size: 16px; letter-spacing: 1px; }
+.div-w       { width: 60px; height: 1px; background: rgba(255,255,255,.28); margin: 22px auto; }
+.host-lbl    { font-size: 12px; color: rgba(255,255,255,.55); letter-spacing: 4px; margin-bottom: 14px; }
+.host-tbl    { display: grid; grid-template-columns: 1fr 1px 1fr; max-width: 240px; margin: 0 auto 20px; }
+.host-col    { text-align: center; font-size: 15px; color: rgba(255,255,255,.88); line-height: 2.5; }
+.host-sep    { background: rgba(255,255,255,.22); margin: 4px 0; }
+.w-invite    { font-size: 11px; color: rgba(255,255,255,.38); letter-spacing: 3px; margin-top: 20px; }
 
-  .divider {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin: 1rem 0;
-  }
+/* ── STORY ── */
+#story       { background: var(--cream-lt); padding: 72px 24px; }
+#story .in   { max-width: 440px; margin: 0 auto; }
+.s-title     { font-size: 17px; font-weight: 700; color: var(--txt); margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+.s-text      { font-size: 14px; color: var(--txt-mid); line-height: 2.1; margin-bottom: 24px; }
+.photo-grid  { display: grid; grid-template-columns: 2fr 1fr; grid-template-rows: 1fr 1fr; gap: 7px; height: 340px; }
+.ph-main     { grid-row: 1 / 3; border-radius: 10px; overflow: hidden; background: linear-gradient(135deg, #C4B5A5, #8B7060); display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,.35); font-size: 30px; }
+.ph-thumb    { border-radius: 10px; overflow: hidden; background: linear-gradient(135deg, #B8A898, #7A6050); display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,.35); font-size: 22px; }
+.ph-main img, .ph-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.photo-credit { font-size: 11px; color: #C0B0A0; text-align: center; margin-top: 10px; letter-spacing: 1px; }
 
-  .divider-line {
-    flex: 1;
-    height: 0.5px;
-    background: #f4b8c8;
-  }
+/* ── SCHEDULE ── */
+#schedule    { background: var(--cream-lt); padding: 72px 24px; border-top: 1px solid rgba(139,94,60,.1); }
+#schedule .in { max-width: 440px; margin: 0 auto; }
+.sec-title   { font-family: 'Playfair Display', serif; font-size: 26px; color: var(--txt); font-weight: 400; margin-bottom: 28px; }
+.sched-row   { display: flex; align-items: flex-start; gap: 14px; margin-bottom: 20px; }
+.sched-time  { font-size: 14px; font-weight: 700; color: var(--br-mid); min-width: 48px; padding-top: 3px; }
+.sched-dot   { width: 8px; height: 8px; border-radius: 50%; background: var(--br-light); margin-top: 7px; flex-shrink: 0; }
+.sched-desc  { font-size: 14px; color: var(--txt-mid); line-height: 1.6; }
+.pal-head    { font-size: 12px; color: var(--txt-mid); letter-spacing: 3px; margin: 28px 0 12px; }
+.pal-row     { display: flex; gap: 8px; flex-wrap: wrap; }
+.pal-chip    { width: 38px; height: 38px; border-radius: 8px; box-shadow: 0 1px 5px rgba(0,0,0,.12); }
 
-  .divider-icon {
-    color: #e8a0b4;
-    font-size: 18px;
-  }
+/* ── TRANSPORT ── */
+#transport   { background: var(--br); padding: 72px 24px; color: #fff; }
+#transport .in { max-width: 440px; margin: 0 auto; }
+#transport .sec-title { color: #fff; }
+.trans-item  { margin-bottom: 26px; }
+.trans-title { display: flex; align-items: center; gap: 8px; font-size: 15px; font-weight: 700; color: #fff; margin-bottom: 10px; }
+.trans-title::before { content: '◆'; color: var(--br-light); font-size: 9px; }
+.trans-list  { padding-left: 16px; }
+.trans-list li { list-style: none; font-size: 13px; color: rgba(255,255,255,.8); line-height: 2.3; position: relative; }
+.trans-list li::before { content: '・'; color: var(--br-light); position: absolute; left: -14px; }
+.map-box     { border-radius: 12px; overflow: hidden; height: 200px; margin-top: 24px; background: #C0B0A0; }
+.map-box iframe { width: 100%; height: 100%; border: none; }
+.map-ph      { width: 100%; height: 100%; background: linear-gradient(135deg, #C0B0A0, #8B7B6B); display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,.7); font-size: 13px; letter-spacing: 2px; }
 
-  .names {
-    text-align: center;
-    font-family: 'Great Vibes', cursive;
-    font-size: 42px;
-    color: #b05570;
-    margin: 0.8rem 0 0.3rem;
-  }
+/* ── VENUE ── */
+#venue       { position: relative; height: 320px; overflow: hidden; }
+.venue-bg    {
+  position: absolute; inset: 0;
+  background:
+    linear-gradient(180deg, rgba(25,15,8,.2) 0%, rgba(25,15,8,.5) 100%),
+    linear-gradient(135deg, #7B9B6A 0%, #5A7A4A 30%, #8B7060 60%, #6A8060 100%);
+  background-size: cover; background-position: center;
+  transform: scale(1.05); transition: transform .8s ease;
+}
+#venue:hover .venue-bg { transform: scale(1.02); }
+.venue-cnt   { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #fff; text-align: center; }
+.venue-zh    { font-family: 'Noto Serif TC', serif; font-size: 30px; letter-spacing: 6px; margin-bottom: 6px; text-shadow: 0 1px 12px rgba(0,0,0,.4); }
+.venue-en    { font-size: 11px; letter-spacing: 7px; color: rgba(255,255,255,.72); margin-bottom: 22px; }
+.venue-cta   { border: 1px solid rgba(255,255,255,.65); background: rgba(255,255,255,.15); backdrop-filter: blur(4px); color: #fff; padding: 9px 28px; border-radius: 24px; font-size: 13px; cursor: pointer; font-family: 'Noto Sans TC', sans-serif; letter-spacing: 2px; transition: background .2s; }
+.venue-cta:hover { background: rgba(255,255,255,.25); }
 
-  .names span {
-    color: #e8a0b4;
-    font-size: 22px;
-    margin: 0 14px;
-  }
+/* ── RSVP ── */
+#rsvp        { background: var(--cream-lt); padding: 72px 24px; }
+#rsvp .in    { max-width: 440px; margin: 0 auto; text-align: center; }
+#rsvp .sec-title { text-align: center; }
+.rsvp-card   { background: #fff; border-radius: 18px; padding: 36px 28px; box-shadow: 0 4px 32px rgba(58,36,21,.08); max-width: 340px; margin: 0 auto; }
+.rsvp-avatar { width: 90px; height: 90px; border-radius: 50%; background: linear-gradient(135deg, #C4B5A5, #8B7060); margin: 0 auto 18px; display: flex; align-items: center; justify-content: center; font-size: 36px; overflow: hidden; }
+.rsvp-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.rsvp-name   { font-size: 17px; font-weight: 700; color: var(--txt); margin-bottom: 4px; }
+.rsvp-sub    { font-size: 12px; color: #C0B0A0; letter-spacing: 1px; margin-bottom: 14px; }
+.rsvp-meta   { font-size: 12px; color: #D0C0B0; margin-bottom: 24px; }
+.rsvp-btn    { background: var(--br-light); color: #fff; border: none; padding: 13px 52px; border-radius: 10px; font-size: 16px; font-family: 'Noto Sans TC', sans-serif; font-weight: 700; cursor: pointer; letter-spacing: 3px; transition: background .2s, transform .15s; }
+.rsvp-btn:hover { background: var(--br); transform: scale(1.02); }
 
-  .date-box {
-    text-align: center;
-    margin: 1rem 0;
-  }
+/* ── FOOTER ── */
+footer   { background: var(--br); padding: 24px 20px; text-align: center; }
+.ft-ig   { display: inline-flex; align-items: center; gap: 6px; color: rgba(255,255,255,.8); text-decoration: none; font-size: 14px; margin-bottom: 8px; }
+.ft-text { font-size: 12px; color: rgba(255,255,255,.45); letter-spacing: 2px; }
 
-  .date-main {
-    font-size: 22px;
-    color: #c0607a;
-    letter-spacing: 2px;
-  }
-
-  .date-sub {
-    font-size: 12px;
-    color: #d48a9e;
-    letter-spacing: 4px;
-    margin-top: 4px;
-  }
-
-  .countdown {
-    display: flex;
-    gap: 8px;
-    justify-content: center;
-    margin: 0.8rem 0;
-  }
-
-  .count-unit {
-    text-align: center;
-    background: rgba(255,255,255,0.7);
-    border: 0.5px solid #f4b8c8;
-    border-radius: 10px;
-    padding: 8px 12px;
-    min-width: 52px;
-  }
-
-  .count-num {
-    font-family: 'Caveat', cursive;
-    font-weight: 600;
-    font-size: 28px;
-    color: #c0607a;
-    display: block;
-  }
-
-  .count-label {
-    font-size: 10px;
-    color: #d48a9e;
-    letter-spacing: 1px;
-  }
-
-  .info-row {
-    display: flex;
-    gap: 10px;
-    margin: 1rem 0;
-  }
-
-  .info-card {
-    flex: 1;
-    background: rgba(255,255,255,0.7);
-    border: 0.5px solid #f4b8c8;
-    border-radius: 12px;
-    padding: 0.9rem 0.5rem;
-    text-align: center;
-  }
-
-  .info-icon {
-    font-size: 20px;
-    margin-bottom: 5px;
-  }
-
-  .info-label {
-    font-size: 10px;
-    color: #d48a9e;
-    letter-spacing: 2px;
-    margin-bottom: 3px;
-  }
-
-  .info-value {
-    font-size: 13px;
-    color: #8b4560;
-    line-height: 1.5;
-  }
-
-  .section-title {
-    font-size: 12px;
-    color: #c0607a;
-    letter-spacing: 4px;
-    text-align: center;
-    margin: 1.5rem 0 1rem;
-  }
-
-  .form-area {
-    background: rgba(255,255,255,0.8);
-    border: 0.5px solid #f4b8c8;
-    border-radius: 14px;
-    padding: 1.5rem;
-  }
-
-  .form-group {
-    margin-bottom: 1rem;
-  }
-
-  .form-label {
-    font-size: 11px;
-    color: #b07080;
-    letter-spacing: 1px;
-    margin-bottom: 6px;
-    display: block;
-  }
-
-  .form-input {
-    width: 100%;
-    border: 0.5px solid #f4b8c8;
-    border-radius: 8px;
-    padding: 9px 12px;
-    font-size: 13px;
-    font-family: 'Noto Sans TC', sans-serif;
-    font-weight: 900;
-    color: #7a3a50;
-    background: rgba(255,255,255,0.95);
-    outline: none;
-    transition: border-color 0.2s;
-  }
-
-  .form-input:focus {
-    border-color: #e8a0b4;
-  }
-
-  textarea.form-input {
-    resize: none;
-  }
-
-  .attend-options {
-    display: flex;
-    gap: 8px;
-  }
-
-  .attend-btn {
-    flex: 1;
-    padding: 9px 4px;
-    border: 0.5px solid #f4b8c8;
-    border-radius: 8px;
-    background: white;
-    font-size: 12px;
-    color: #b07080;
-    cursor: pointer;
-    font-family: 'Noto Sans TC', sans-serif;
-    font-weight: 900;
-    transition: all 0.2s;
-    text-align: center;
-  }
-
-  .attend-btn:hover {
-    background: #fff0f4;
-  }
-
-  .attend-btn.active {
-    background: #f9d0dc;
-    border-color: #e8a0b4;
-    color: #8b4560;
-    font-weight: 500;
-  }
-
-  .submit-btn {
-    width: 100%;
-    padding: 11px;
-    background: linear-gradient(135deg, #e8a0b4, #d4607a);
-    border: none;
-    border-radius: 10px;
-    color: white;
-    font-size: 13px;
-    font-family: 'Noto Sans TC', sans-serif;
-    font-weight: 900;
-    cursor: pointer;
-    margin-top: 0.5rem;
-    transition: opacity 0.2s;
-  }
-
-  .submit-btn:hover { opacity: 0.88; }
-  .submit-btn:disabled { opacity: 0.6; cursor: not-allowed; }
-
-  .success-msg {
-    display: none;
-    text-align: center;
-    padding: 1.5rem 1rem;
-    color: #c0607a;
-  }
-
-  .success-msg .success-icon {
-    font-size: 36px;
-    margin-bottom: 10px;
-  }
-
-  .success-msg .success-text {
-    font-size: 16px;
-    letter-spacing: 2px;
-    margin-bottom: 6px;
-  }
-
-  .success-msg .success-sub {
-    font-size: 11px;
-    color: #d48a9e;
-    letter-spacing: 2px;
-  }
-
-  .footer-note {
-    text-align: center;
-    margin-top: 1.2rem;
-    font-size: 11px;
-    color: #d48a9e;
-    letter-spacing: 2px;
-  }
+/* ── TYPEFORM OVERLAY ── */
+.tf-ov { display: none; position: fixed; inset: 0; z-index: 2000; flex-direction: column; background: var(--cream-lt); }
+.tf-ov.open { display: flex; }
+.tf-top       { background: #fff; border-bottom: 1px solid #EEE; flex-shrink: 0; }
+.tf-top-row   { display: flex; justify-content: space-between; align-items: center; padding: 14px 20px; }
+.tf-top-title { font-size: 16px; font-weight: 700; color: var(--txt); }
+.tf-close     { background: none; border: none; font-size: 22px; color: #BBB; cursor: pointer; line-height: 1; padding: 0 4px; }
+.tf-prog-track { height: 3px; background: #EEE; }
+.tf-prog-fill  { height: 100%; background: linear-gradient(90deg, var(--br-light), var(--br-mid)); transition: width .4s ease; }
+.tf-body  { flex: 1; overflow-y: auto; }
+.tf-step  { display: none; padding: 44px 28px 28px; max-width: 480px; margin: 0 auto; animation: stepIn .35s ease; }
+.tf-step.on { display: block; }
+@keyframes stepIn { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: translateY(0); } }
+.tf-q-num  { font-size: 12px; color: #C0B0A0; margin-bottom: 14px; letter-spacing: 1px; }
+.tf-q-text { font-size: 19px; font-weight: 700; color: var(--txt); margin-bottom: 8px; line-height: 1.5; }
+.tf-q-hint { font-size: 12px; color: #B0A090; margin-bottom: 28px; line-height: 1.75; }
+.tf-input  { width: 100%; border: none; border-bottom: 2px solid var(--br-light); background: transparent; font-size: 17px; font-family: 'Noto Sans TC', sans-serif; color: var(--txt); padding: 10px 0; outline: none; margin-bottom: 28px; }
+.tf-input::placeholder { color: #CCC; }
+.tf-input:focus { border-color: var(--br); }
+.tf-opts   { display: flex; flex-direction: column; gap: 10px; margin-bottom: 24px; }
+.tf-opt    { display: flex; align-items: center; gap: 14px; border: 1.5px solid #E5DDD5; border-radius: 10px; padding: 13px 16px; cursor: pointer; background: #fff; transition: border-color .2s, background .2s; }
+.tf-opt:hover, .tf-opt.sel { border-color: var(--br-mid); background: #FDF6EE; }
+.tf-opt-key  { width: 26px; height: 26px; border-radius: 5px; background: var(--br-light); color: #fff; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.tf-opt-text { font-size: 14px; color: var(--txt); }
+.tf-num-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-bottom: 28px; }
+.tf-num  { aspect-ratio: 1; border: 1.5px solid #E5DDD5; border-radius: 8px; background: #fff; font-size: 16px; color: var(--txt); cursor: pointer; transition: all .2s; font-family: 'Noto Sans TC', sans-serif; }
+.tf-num:hover { border-color: var(--br-light); }
+.tf-num.sel   { background: var(--br-light); color: #fff; border-color: var(--br-light); }
+.tf-ok   { background: var(--br-light); color: #fff; border: none; padding: 11px 26px; border-radius: 8px; font-size: 14px; font-family: 'Noto Sans TC', sans-serif; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; transition: background .2s; }
+.tf-ok:hover { background: var(--br); }
+.tf-foot { background: #fff; border-top: 1px solid #EEE; padding: 14px 28px; display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; }
+.tf-navs { display: flex; gap: 8px; }
+.tf-nav  { width: 36px; height: 36px; border: 1.5px solid #E5DDD5; border-radius: 50%; background: #fff; cursor: pointer; font-size: 14px; display: flex; align-items: center; justify-content: center; color: var(--txt-mid); transition: border-color .2s; }
+.tf-nav:hover { border-color: var(--br-light); }
+.tf-pow  { font-size: 11px; color: #DDD; }
 </style>
 </head>
 <body>
 
-<div class="card-main">
-  <div class="flower-deco" style="top:-15px;left:-25px">🌸</div>
-  <div class="flower-deco" style="bottom:-15px;right:-25px">🌺</div>
+<!-- ── NAV ── -->
+<nav class="nav">
+  <div class="nav-title">Juju &amp; Frank's Wedding</div>
+  <a href="#rsvp" class="nav-btn">我要參加</a>
+</nav>
 
-  <div class="ornament">✦ ✦ ✦</div>
-  <div class="title-en">Wedding Invitation</div>
-  <div class="title-zh">誠摯邀請您參加我們的婚禮</div>
-
-  <div class="divider">
-    <div class="divider-line"></div>
-    <div class="divider-icon">♡</div>
-    <div class="divider-line"></div>
+<!-- ── HERO ── -->
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-content">
+    <div class="hero-cnt" id="heroCnt"></div>
+    <div class="hero-names">Juju &amp; Frank</div>
+    <div class="hero-date">2027 / 5 / 30（日）12:00</div>
   </div>
+</section>
 
-  <div class="names">Juju <span>&</span> Frank</div>
-  <div style="text-align:center;font-family:'Noto Sans TC',sans-serif;font-weight:900;font-size:16px;color:#c0607a;letter-spacing:8px;margin-top:2px;">如娟 <span style="color:#e8a0b4;font-size:13px;letter-spacing:2px;">&</span> 凱詳</div>
-  <div style="text-align:center;font-size:11px;color:#d48a9e;letter-spacing:4px;margin-top:6px">2027 · 05 · 30</div>
-
-  <div class="divider">
-    <div class="divider-line"></div>
-    <div class="divider-icon">✿</div>
-    <div class="divider-line"></div>
-  </div>
-
-  <div class="date-box">
-    <div class="date-main">2027 年 05 月 30 日</div>
-    <div class="date-sub">SUNDAY · 午宴 12:00</div>
-  </div>
-
-  <div id="countdown" class="countdown"></div>
-
-  <div class="info-row">
-    <div class="info-card">
-      <div class="info-icon">📍</div>
-      <div class="info-label">地點</div>
-      <div class="info-value">待填入<br><span style="font-size:11px;color:#d48a9e">婚宴廳</span></div>
+<!-- ── WELCOME ── -->
+<section id="welcome">
+  <div class="in">
+    <h1 class="rv">Welcome To<br>Our Wedding</h1>
+    <div class="date-tag rv d1">2027/5/30，星期日 12:00</div>
+    <div class="rings-wrap rv d2">
+      <div class="arch"></div>
+      <svg class="rings-svg" viewBox="0 0 110 110" fill="none">
+        <circle cx="40" cy="68" r="26" stroke="rgba(255,255,255,.88)" stroke-width="5.5"/>
+        <circle cx="70" cy="68" r="26" stroke="rgba(255,255,255,.65)" stroke-width="5.5"/>
+        <text x="63" y="26" font-size="16" fill="rgba(255,255,255,.9)">✦</text>
+        <text x="78" y="38" font-size="9"  fill="rgba(255,255,255,.7)">✦</text>
+        <text x="51" y="20" font-size="9"  fill="rgba(255,255,255,.55)">✦</text>
+      </svg>
     </div>
-    <div class="info-card">
-      <div class="info-icon">🕐</div>
-      <div class="info-label">時間</div>
-      <div class="info-value">入席 11:30<br><span style="font-size:11px;color:#d48a9e">典禮 12:00</span></div>
+    <div class="couple-big rv d3">如娟 <span>&amp;</span> 凱詳</div>
+    <div class="div-w rv d4"></div>
+    <div class="host-lbl rv d4">主婚人</div>
+    <div class="host-tbl rv d5">
+      <div class="host-col">[男方父]<br>[男方母]</div>
+      <div class="host-sep"></div>
+      <div class="host-col">[女方父]<br>[女方母]</div>
     </div>
-    <div class="info-card">
-      <div class="info-icon">👗</div>
-      <div class="info-label">著裝</div>
-      <div class="info-value">正式服裝<br><span style="font-size:11px;color:#d48a9e">Formal Attire</span></div>
+    <div class="w-invite rv d6">敬邀</div>
+  </div>
+</section>
+
+<!-- ── STORY ── -->
+<section id="story">
+  <div class="in">
+    <div class="s-title rv">💍 是的，我們結婚了 🏠</div>
+    <div class="s-text rv d1">在這意義重大的日子<br>衷心希望能有您的蒞臨參與 ❤️</div>
+    <div class="photo-grid rv d2">
+      <div class="ph-main">📷</div>
+      <div class="ph-thumb">📷</div>
+      <div class="ph-thumb">📷</div>
+    </div>
+    <div class="photo-credit rv d3">photo by GoodLuck image</div>
+  </div>
+</section>
+
+<!-- ── SCHEDULE ── -->
+<section id="schedule">
+  <div class="in">
+    <div class="sec-title rv">婚禮流程</div>
+    <div class="sched-row rv d1">
+      <div class="sched-time">11:30</div>
+      <div class="sched-dot"></div>
+      <div class="sched-desc">✏️ 簽到・入場</div>
+    </div>
+    <div class="sched-row rv d2">
+      <div class="sched-time">12:00</div>
+      <div class="sched-dot"></div>
+      <div class="sched-desc">🎊 婚禮典禮</div>
+    </div>
+    <div class="sched-row rv d3">
+      <div class="sched-time">12:30</div>
+      <div class="sched-dot"></div>
+      <div class="sched-desc">🍽️ 準時開席</div>
+    </div>
+    <div class="pal-head rv d4">建議著裝色系：大地色</div>
+    <div class="pal-row rv d5">
+      <div class="pal-chip" style="background:#9B8C7E"></div>
+      <div class="pal-chip" style="background:#C47A5A"></div>
+      <div class="pal-chip" style="background:#A0402A"></div>
+      <div class="pal-chip" style="background:#C4956A"></div>
+      <div class="pal-chip" style="background:#D4B896"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ── TRANSPORT ── -->
+<section id="transport">
+  <div class="in">
+    <div class="sec-title rv">交通方式</div>
+    <div class="trans-item rv d1">
+      <div class="trans-title">台鐵・高鐵</div>
+      <ul class="trans-list">
+        <li>永靖火車站搭計程車約 7min</li>
+        <li>彰化高鐵站搭計程車約 14min</li>
+      </ul>
+    </div>
+    <div class="trans-item rv d2">
+      <div class="trans-title">自行開車</div>
+      <ul class="trans-list">
+        <li>可點擊下方地圖直接導航</li>
+        <li>可直接進入停車場免費停車</li>
+      </ul>
+    </div>
+    <div class="map-box rv d3">
+      <!-- 填入正確地址後將下方 div 換成 iframe -->
+      <div class="map-ph">📍 請填入婚宴地址後啟用地圖</div>
+    </div>
+  </div>
+</section>
+
+<!-- ── VENUE ── -->
+<section id="venue">
+  <div class="venue-bg"></div>
+  <div class="venue-cnt">
+    <div class="venue-zh rv">婚宴場地</div>
+    <div class="venue-en rv d1">WEDDING VENUE</div>
+    <button class="venue-cta rv d2">查看場地</button>
+  </div>
+</section>
+
+<!-- ── RSVP ── -->
+<section id="rsvp">
+  <div class="in">
+    <div class="sec-title rv">出席統計</div>
+    <div class="rsvp-card rv-sc d2">
+      <div class="rsvp-avatar">👰</div>
+      <div class="rsvp-name">如娟在奔起 👰</div>
+      <div class="rsvp-sub">婚禮出席問卷</div>
+      <div class="rsvp-meta">⏱ Takes 1 minute</div>
+      <button class="rsvp-btn" onclick="openTF()">Start</button>
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <a class="ft-ig" href="#">Instagram ↗</a><br>
+  <div class="ft-text">竭誠歡迎您 😎</div>
+</footer>
+
+<!-- ── TYPEFORM OVERLAY ── -->
+<div class="tf-ov" id="tfOv">
+  <div class="tf-top">
+    <div class="tf-top-row">
+      <span class="tf-top-title">出席統計</span>
+      <button class="tf-close" onclick="closeTF()">✕</button>
+    </div>
+    <div class="tf-prog-track">
+      <div class="tf-prog-fill" id="tfBar" style="width:0%"></div>
     </div>
   </div>
 
-  <div class="divider">
-    <div class="divider-line"></div>
-    <div class="divider-icon">❧</div>
-    <div class="divider-line"></div>
-  </div>
+  <div class="tf-body">
+    <!-- Q1 姓名 -->
+    <div class="tf-step on" id="s1">
+      <div class="tf-q-num">1 →</div>
+      <div class="tf-q-text">您的中文大名 *</div>
+      <input class="tf-input" id="fName" type="text" placeholder="Type your answer here..">
+      <button class="tf-ok" onclick="goNext(2)">OK ✓</button>
+    </div>
 
-  <div class="section-title">✦ 出席回覆 ✦</div>
-
-  <div class="form-area">
-    <div id="formContent">
-      <div class="form-group">
-        <label class="form-label">您的姓名</label>
-        <input class="form-input" id="guestName" type="text" placeholder="請輸入姓名">
-      </div>
-      <div class="form-group">
-        <label class="form-label">出席意願</label>
-        <div class="attend-options">
-          <div class="attend-btn" id="btnYes" onclick="selectAttend('Yes','我會出席')">🎉 我會出席</div>
-          <div class="attend-btn" id="btnMaybe" onclick="selectAttend('Maybe','可能出席')">🤔 可能出席</div>
-          <div class="attend-btn" id="btnNo" onclick="selectAttend('No','無法出席')">😔 無法出席</div>
+    <!-- Q2 出席 -->
+    <div class="tf-step" id="s2">
+      <div class="tf-q-num">2 →</div>
+      <div class="tf-q-text">請問 2027/5/30 午宴是否方便出席？ *</div>
+      <div class="tf-opts">
+        <div class="tf-opt" onclick="pick(this,'attend','肯定出席');goNext(3)">
+          <div class="tf-opt-key">A</div><div class="tf-opt-text">肯定出席</div>
+        </div>
+        <div class="tf-opt" onclick="pick(this,'attend','可惜無法出席');goNext(3)">
+          <div class="tf-opt-key">B</div><div class="tf-opt-text">可惜無法出席 😔</div>
         </div>
       </div>
-      <div class="form-group">
-        <label class="form-label">出席人數（含本人）</label>
-        <input class="form-input" id="guestCount" type="number" min="1" max="10" value="1" style="width:90px">
-      </div>
-      <div class="form-group">
-        <label class="form-label">備註（飲食需求等）</label>
-        <textarea class="form-input" id="guestNote" rows="2" placeholder="如有素食、過敏等需求請告知"></textarea>
-      </div>
-      <button class="submit-btn" id="submitBtn" onclick="submitForm()">送出回覆</button>
     </div>
 
-    <div class="success-msg" id="successMsg">
-      <div class="success-icon">🌸</div>
-      <div class="success-text">感謝您的回覆！</div>
-      <div class="success-sub">期待與您共享這美好時刻</div>
+    <!-- Q3 哪方 -->
+    <div class="tf-step" id="s3">
+      <div class="tf-q-num">3 →</div>
+      <div class="tf-q-text">您是哪方的家人/朋友？ *</div>
+      <div class="tf-opts">
+        <div class="tf-opt" onclick="pick(this,'side','男方家人');goNext(4)">
+          <div class="tf-opt-key">A</div><div class="tf-opt-text">男方家人</div>
+        </div>
+        <div class="tf-opt" onclick="pick(this,'side','男方朋友');goNext(4)">
+          <div class="tf-opt-key">B</div><div class="tf-opt-text">男方朋友</div>
+        </div>
+        <div class="tf-opt" onclick="pick(this,'side','女方家人');goNext(4)">
+          <div class="tf-opt-key">C</div><div class="tf-opt-text">女方家人</div>
+        </div>
+        <div class="tf-opt" onclick="pick(this,'side','女方朋友');goNext(4)">
+          <div class="tf-opt-key">D</div><div class="tf-opt-text">女方朋友</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Q4 人數 -->
+    <div class="tf-step" id="s4">
+      <div class="tf-q-num">4 →</div>
+      <div class="tf-q-text">請問共有幾位成員一同參加？ *</div>
+      <div class="tf-q-hint">請包含自己的人數並以一個家庭為單位，因場地空間有限，確認人數後將不再更動喔～</div>
+      <div class="tf-num-grid">
+        <button class="tf-num" onclick="pickNum(this,1)">1</button>
+        <button class="tf-num" onclick="pickNum(this,2)">2</button>
+        <button class="tf-num" onclick="pickNum(this,3)">3</button>
+        <button class="tf-num" onclick="pickNum(this,4)">4</button>
+        <button class="tf-num" onclick="pickNum(this,5)">5</button>
+        <button class="tf-num" onclick="pickNum(this,6)">6</button>
+        <button class="tf-num" onclick="pickNum(this,7)">7</button>
+        <button class="tf-num" onclick="pickNum(this,8)">8</button>
+        <button class="tf-num" onclick="pickNum(this,9)">9</button>
+        <button class="tf-num" onclick="pickNum(this,10)">10</button>
+      </div>
+      <button class="tf-ok" onclick="submitForm()">OK ✓</button>
+    </div>
+
+    <!-- 完成 -->
+    <div class="tf-step" id="sDone">
+      <div style="text-align:center;padding:40px 0">
+        <div style="font-size:60px;margin-bottom:22px">🌸</div>
+        <div style="font-size:22px;font-weight:700;color:var(--txt);margin-bottom:12px">感謝您的回覆！</div>
+        <div style="font-size:14px;color:var(--txt-mid);line-height:2">期待與您共享這美好時刻</div>
+      </div>
     </div>
   </div>
 
-  <div class="footer-note">如有疑問請聯絡新人</div>
-  <div class="ornament" style="margin-top:1rem;font-size:16px">✦ ✦ ✦</div>
+  <div class="tf-foot">
+    <div class="tf-navs">
+      <button class="tf-nav" onclick="prevStep()" title="上一題">▲</button>
+      <button class="tf-nav" onclick="nextStep()" title="下一題">▼</button>
+    </div>
+    <div class="tf-pow">Powered by ♡</div>
+  </div>
 </div>
 
 <script>
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbygDHk9DStPmwJaklv4GM8jffvJVSsIdzjM2ydQZGKk4n_v-OgZgFpXFZboS2HREDmukw/exec';
-let attendValue = '';
-let attendLabel = '';
+// ── HERO 倒數（Days / Hours / Min）──
+function renderCnt() {
+  const t = new Date('2027-05-30T12:00:00'), n = new Date(), d = t - n;
+  if (d <= 0) {
+    document.getElementById('heroCnt').innerHTML = '<div style="color:rgba(255,255,255,.85);font-size:14px;letter-spacing:3px">幸福已到來 🌸</div>';
+    return;
+  }
+  const days  = Math.floor(d / 86400000);
+  const hours = Math.floor((d % 86400000) / 3600000);
+  const mins  = Math.floor((d % 3600000)  / 60000);
+  document.getElementById('heroCnt').innerHTML = `
+    <div class="h-unit"><span class="h-num">${String(days).padStart(2,'0')}</span><span class="h-lbl">Days</span></div>
+    <span class="h-sep">:</span>
+    <div class="h-unit"><span class="h-num">${String(hours).padStart(2,'0')}</span><span class="h-lbl">Hours</span></div>
+    <span class="h-sep">:</span>
+    <div class="h-unit"><span class="h-num">${String(mins).padStart(2,'0')}</span><span class="h-lbl">Min</span></div>`;
+}
+renderCnt();
+setInterval(renderCnt, 60000);
 
-function selectAttend(val, label) {
-  attendValue = val;
-  attendLabel = label;
-  ['Yes','Maybe','No'].forEach(v => document.getElementById('btn'+v).classList.remove('active'));
-  document.getElementById('btn'+val).classList.add('active');
+// Hero Ken Burns 效果
+setTimeout(() => document.getElementById('hero').classList.add('loaded'), 50);
+
+// ── 捲動進場動畫（IntersectionObserver）──
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add('on'); obs.unobserve(e.target); }
+  });
+}, { threshold: 0.13, rootMargin: '0px 0px -36px 0px' });
+
+document.querySelectorAll('.rv, .rv-l, .rv-r, .rv-sc').forEach(el => obs.observe(el));
+
+// ── TYPEFORM 邏輯 ──
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbygDHk9DStPmwJaklv4GM8jffvJVSsIdzjM2ydQZGKk4n_v-OgZgFpXFZboS2HREDmukw/exec';
+const TOTAL = 4;
+let cur = 1;
+const ans = { name: '', attend: '', side: '', count: 0 };
+
+function openTF()  { document.getElementById('tfOv').classList.add('open'); document.body.style.overflow = 'hidden'; showStep(1); }
+function closeTF() { document.getElementById('tfOv').classList.remove('open'); document.body.style.overflow = ''; }
+
+function setBar(n) {
+  document.getElementById('tfBar').style.width = (n > TOTAL ? 100 : Math.round((n - 1) / TOTAL * 100)) + '%';
+}
+
+function showStep(n) {
+  document.querySelectorAll('.tf-step').forEach(s => s.classList.remove('on'));
+  const el = document.getElementById(n === 'done' ? 'sDone' : 's' + n);
+  if (el) el.classList.add('on');
+  cur = (n === 'done') ? TOTAL + 1 : n;
+  setBar(cur);
+  document.querySelector('.tf-body').scrollTop = 0;
+}
+
+function goNext(n) {
+  if (cur === 1) {
+    ans.name = document.getElementById('fName').value.trim();
+    if (!ans.name) { document.getElementById('fName').focus(); return; }
+  }
+  showStep(n);
+}
+
+function prevStep() { if (cur > 1 && cur <= TOTAL) showStep(cur - 1); }
+function nextStep() {
+  if (cur < TOTAL) goNext(cur + 1);
+  else if (cur === TOTAL) submitForm();
+}
+
+function pick(el, key, val) {
+  el.closest('.tf-opts').querySelectorAll('.tf-opt').forEach(o => o.classList.remove('sel'));
+  el.classList.add('sel');
+  ans[key] = val;
+}
+
+function pickNum(el, n) {
+  document.querySelectorAll('.tf-num').forEach(b => b.classList.remove('sel'));
+  el.classList.add('sel');
+  ans.count = n;
 }
 
 function submitForm() {
-  const name = document.getElementById('guestName').value.trim();
-  const count = document.getElementById('guestCount').value || '1';
-  const note = document.getElementById('guestNote').value.trim();
-
-  if (!name) { alert('請輸入您的姓名'); return; }
-  if (!attendValue) { alert('請選擇出席意願'); return; }
-
-  const btn = document.getElementById('submitBtn');
-  btn.disabled = true;
-  btn.textContent = '送出中...';
-
+  if (!ans.count) { alert('請選擇人數'); return; }
+  ans.name = document.getElementById('fName').value.trim();
   const cbName = 'cb_' + Date.now();
-  const params = new URLSearchParams({ callback: cbName, name, attend: attendLabel, count, note });
-
-  window[cbName] = function(res) {
-    delete window[cbName];
-    document.getElementById('formContent').style.display = 'none';
-    document.getElementById('successMsg').style.display = 'block';
-  };
-
-  const script = document.createElement('script');
-  script.src = SCRIPT_URL + '?' + params.toString();
-  script.onerror = function() {
-    btn.disabled = false;
-    btn.textContent = '送出回覆';
-    alert('送出失敗，請稍後再試');
-  };
-  document.body.appendChild(script);
+  const params = new URLSearchParams({ callback: cbName, name: ans.name, attend: ans.attend, count: ans.count, note: ans.side });
+  window[cbName] = function() { delete window[cbName]; };
+  const s = document.createElement('script');
+  s.src = SCRIPT_URL + '?' + params.toString();
+  s.onerror = () => {};
+  document.body.appendChild(s);
+  showStep('done');
 }
-
-function updateCountdown() {
-  const wedding = new Date('2027-05-30T12:00:00');
-  const now = new Date();
-  const diff = wedding - now;
-  if (diff <= 0) {
-    document.getElementById('countdown').innerHTML = '<div style="text-align:center;color:#d48a9e;font-size:12px;letter-spacing:3px">幸福已到來 🌸</div>';
-    return;
-  }
-  const days = Math.floor(diff / 86400000);
-  const hours = Math.floor((diff % 86400000) / 3600000);
-  const mins = Math.floor((diff % 3600000) / 60000);
-  const secs = Math.floor((diff % 60000) / 1000);
-  document.getElementById('countdown').innerHTML = `
-    <div class="count-unit"><span class="count-num">${days}</span><span class="count-label">天</span></div>
-    <div class="count-unit"><span class="count-num">${hours}</span><span class="count-label">時</span></div>
-    <div class="count-unit"><span class="count-num">${mins}</span><span class="count-label">分</span></div>
-    <div class="count-unit"><span class="count-num">${secs}</span><span class="count-label">秒</span></div>`;
-}
-updateCountdown();
-setInterval(updateCountdown, 1000);
 </script>
 </body>
 </html>
