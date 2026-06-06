@@ -74,7 +74,8 @@ body.intro-lock { overflow: hidden; }
 .h-num  { font-family: 'Playfair Display', serif; font-size: 42px; color: #fff; display: block; line-height: 1; font-weight: 400; letter-spacing: 2px; }
 .h-sep  { font-size: 30px; color: rgba(255,255,255,.55); padding-bottom: 18px; font-weight: 300; }
 .h-lbl  { font-size: 10px; color: rgba(255,255,255,.7); letter-spacing: 2px; margin-top: 6px; display: block; text-transform: uppercase; }
-.hero-names { font-family: 'Great Vibes', cursive; font-size: 68px; color: #fff; line-height: 1.1; text-shadow: 0 2px 30px rgba(0,0,0,.3); animation: heroUp .9s ease .45s both; margin-bottom: 12px; }
+.hero-names { font-family: 'Great Vibes', cursive; font-size: clamp(42px, 13vw, 68px); color: #fff; line-height: 1.1; text-shadow: 0 2px 30px rgba(0,0,0,.3); animation: heroUp .9s ease .45s both; margin-bottom: 4px; white-space: nowrap; }
+.hero-wedding { font-family: 'Playfair Display', serif; font-size: 16px; color: rgba(255,255,255,.75); letter-spacing: 10px; text-transform: uppercase; animation: heroUp .9s ease .6s both; margin-bottom: 16px; }
 .hero-date  { font-size: 13px; color: rgba(255,255,255,.85); letter-spacing: 4px; animation: heroUp .9s ease .75s both; }
 .hero-scroll {
   position: absolute; bottom: 32px; left: 0; right: 0;
@@ -465,8 +466,9 @@ footer   { background: var(--br); padding: 24px 20px; text-align: center; }
   <div class="hero-bg"></div>
   <div class="hero-content">
     <div class="hero-names">Juju &amp; Frank</div>
+    <div class="hero-wedding">Wedding</div>
     <div class="hero-date">2027 / 5 / 30（日）12:00</div>
-    <a href="#rsvp" class="nav-btn" style="margin-top:28px;padding:12px 36px;font-size:15px;border-radius:28px;letter-spacing:3px;animation:heroUp .9s ease 1s both">我要參加</a>
+    <a href="#rsvp" class="nav-btn" onclick="event.preventDefault();openTF()" style="margin-top:28px;padding:12px 36px;font-size:15px;border-radius:28px;letter-spacing:3px;animation:heroUp .9s ease 1s both">我要參加</a>
   </div>
   <div class="hero-scroll">
     <div class="hero-scroll-line"></div>
@@ -738,7 +740,7 @@ footer   { background: var(--br); padding: 24px 20px; text-align: center; }
 
 <!-- ── USAGI MASCOT ── -->
 <div class="usagi-float">
-  <div class="usagi-inner" onclick="scrollToRSVP()" title="填寫參加調查">
+  <div class="usagi-inner" title="烏薩奇">
       <div class="usagi-bubble">我那天也會到場呦！</div>
     <img class="usagi-svg" src="img/usagi.png" alt="烏薩奇">
   </div>
