@@ -719,7 +719,9 @@ footer   { background: var(--br); padding: 24px 20px; text-align: center; }
 
 <!-- ── USAGI MASCOT ── -->
 <div class="usagi-float">
-  <div class="usagi-inner" title="烏薩奇" onclick="this.classList.toggle('show')">
+  <div class="usagi-inner" title="烏薩奇"
+    onclick="toggleUsagiBubble(event, this)"
+    ontouchend="toggleUsagiBubble(event, this)">
       <div class="usagi-bubble">我那天也會到場呦！</div>
     <img class="usagi-svg" src="img/usagi.png" alt="烏薩奇">
   </div>
@@ -861,9 +863,17 @@ function scrollToRSVP() {
   document.getElementById('rsvp').scrollIntoView({ behavior: 'smooth' });
 }
 
-function toggleUsagiBubble(el) {
+function toggleUsagiBubble(e, el) {
+  e.stopPropagation();
   el.classList.toggle('show');
 }
+function closeUsagiBubble(e) {
+  if (!e.target.closest('.usagi-float')) {
+    document.querySelector('.usagi-inner')?.classList.remove('show');
+  }
+}
+document.addEventListener('click', closeUsagiBubble);
+document.addEventListener('touchend', closeUsagiBubble, { passive: true });
 </script>
 </body>
 </html>
