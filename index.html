@@ -21,6 +21,8 @@
 
 html { scroll-behavior: smooth; }
 body { font-family: 'Noto Sans TC', sans-serif; background: var(--cream-lt); color: var(--txt); overflow-x: hidden; }
+/* 開場時鎖定捲動 */
+body.intro-lock { overflow: hidden; }
 
 /* ── NAV ── */
 .nav {
@@ -51,7 +53,7 @@ body { font-family: 'Noto Sans TC', sans-serif; background: var(--cream-lt); col
 /* ── HERO ── */
 #hero {
   position: relative; height: 100svh; min-height: 600px;
-  margin-top: 44px; overflow: hidden; background: #2C1E14;
+  overflow: hidden; background: #2C1E14;
 }
 .hero-bg {
   position: absolute; inset: 0;
@@ -74,6 +76,25 @@ body { font-family: 'Noto Sans TC', sans-serif; background: var(--cream-lt); col
 .h-lbl  { font-size: 10px; color: rgba(255,255,255,.7); letter-spacing: 2px; margin-top: 6px; display: block; text-transform: uppercase; }
 .hero-names { font-family: 'Great Vibes', cursive; font-size: 68px; color: #fff; line-height: 1.1; text-shadow: 0 2px 30px rgba(0,0,0,.3); animation: heroUp .9s ease .45s both; margin-bottom: 12px; }
 .hero-date  { font-size: 13px; color: rgba(255,255,255,.85); letter-spacing: 4px; animation: heroUp .9s ease .75s both; }
+.hero-scroll {
+  position: absolute; bottom: 32px; left: 0; right: 0;
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  opacity: 0; animation: heroFadeIn .9s ease 1.4s forwards;
+}
+@keyframes heroFadeIn { to { opacity: 1; } }
+.hero-scroll-line {
+  width: 1px; height: 56px;
+  background: linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,.75) 100%);
+  animation: scrollPulse 1.8s ease-in-out infinite;
+}
+.hero-scroll-txt {
+  font-size: 13px; color: rgba(255,255,255,.72);
+  letter-spacing: 5px;
+}
+@keyframes scrollPulse {
+  0%, 100% { transform: scaleY(1);   opacity: .7; }
+  50%       { transform: scaleY(1.2); opacity: 1; }
+}
 @keyframes heroUp { from { opacity: 0; transform: translateY(26px); } to { opacity: 1; transform: translateY(0); } }
 
 /* ── WELCOME ── */
@@ -192,6 +213,9 @@ footer   { background: var(--br); padding: 24px 20px; text-align: center; }
 .tf-input  { width: 100%; border: none; border-bottom: 2px solid var(--br-light); background: transparent; font-size: 17px; font-family: 'Noto Sans TC', sans-serif; color: var(--txt); padding: 10px 0; outline: none; margin-bottom: 28px; }
 .tf-input::placeholder { color: #CCC; }
 .tf-input:focus { border-color: var(--br); }
+.tf-textarea { width: 100%; border: none; border-bottom: 2px solid var(--br-light); background: transparent; font-size: 15px; font-family: 'Noto Sans TC', sans-serif; color: var(--txt); padding: 10px 0; outline: none; margin-bottom: 28px; resize: none; min-height: 100px; line-height: 1.8; }
+.tf-textarea::placeholder { color: #CCC; }
+.tf-textarea:focus { border-color: var(--br); }
 .tf-opts   { display: flex; flex-direction: column; gap: 10px; margin-bottom: 24px; }
 .tf-opt    { display: flex; align-items: center; gap: 14px; border: 1.5px solid #E5DDD5; border-radius: 10px; padding: 13px 16px; cursor: pointer; background: #fff; transition: border-color .2s, background .2s; }
 .tf-opt:hover, .tf-opt.sel { border-color: var(--br-mid); background: #FDF6EE; }
@@ -208,23 +232,245 @@ footer   { background: var(--br); padding: 24px 20px; text-align: center; }
 .tf-nav  { width: 36px; height: 36px; border: 1.5px solid #E5DDD5; border-radius: 50%; background: #fff; cursor: pointer; font-size: 14px; display: flex; align-items: center; justify-content: center; color: var(--txt-mid); transition: border-color .2s; }
 .tf-nav:hover { border-color: var(--br-light); }
 .tf-pow  { font-size: 11px; color: #DDD; }
+
+/* ── USAGI MASCOT ── */
+.usagi-float {
+  position: fixed; bottom: 28px; right: 6px; z-index: 998;
+  animation: usagiFloat 3s ease-in-out infinite;
+  filter: drop-shadow(0 4px 14px rgba(58,36,21,.18));
+}
+.usagi-inner {
+  position: relative; cursor: pointer;
+  transition: transform .2s;
+}
+.usagi-inner:hover { transform: scale(1.1); }
+.usagi-svg { width: 90px; height: auto; display: block; }
+@keyframes usagiFloat {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-11px); }
+}
+.usagi-bubble {
+  position: absolute; bottom: calc(100% + 10px); right: 0;
+  background: #fff; border: 1.5px solid #E5DDD5;
+  border-radius: 14px 14px 4px 14px;
+  padding: 8px 14px; font-size: 12px; color: var(--txt);
+  white-space: nowrap; font-family: 'Noto Sans TC', sans-serif;
+  box-shadow: 0 2px 12px rgba(58,36,21,.1);
+  opacity: 0; transform: translateY(6px) scale(.94);
+  transition: opacity .25s, transform .25s;
+  pointer-events: none;
+}
+.usagi-inner:hover .usagi-bubble { opacity: 1; transform: translateY(0) scale(1); }
+
+/* ── ENVELOPE INTRO ── */
+#envIntro {
+  position: fixed; inset: 0; z-index: 3000;
+  background: var(--br);
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden;
+  transition: opacity .9s ease, visibility .9s ease;
+}
+#envIntro.hide { opacity: 0; visibility: hidden; pointer-events: none; }
+
+/* 飄落花瓣 */
+.petal {
+  position: absolute; border-radius: 50% 0 50% 0;
+  background: rgba(255,210,200,.28); animation: petalFall linear infinite;
+  pointer-events: none;
+}
+@keyframes petalFall {
+  0%   { transform: translateY(-40px) rotate(0deg); opacity: 0; }
+  12%  { opacity: 1; }
+  88%  { opacity: .5; }
+  100% { transform: translateY(108vh) rotate(500deg) translateX(20px); opacity: 0; }
+}
+
+/* 封面卡片 */
+.env-cover {
+  position: relative;
+  width: min(320px, 88vw);
+  background: #FAF7F2;
+  border-radius: 16px;
+  padding: 46px 28px 38px;
+  text-align: center;
+  box-shadow: 0 24px 80px rgba(20,8,0,.45), 0 6px 24px rgba(20,8,0,.22);
+  animation: envAppear .95s cubic-bezier(.3,0,.2,1) .25s both;
+  overflow: hidden;
+}
+@keyframes envAppear {
+  from { opacity: 0; transform: translateY(55px) scale(.88); }
+  to   { opacity: 1; transform: none; }
+}
+/* 開啟動畫 */
+.env-cover.opening {
+  animation: coverOpen 1.3s cubic-bezier(.4,0,.2,1) forwards;
+}
+@keyframes coverOpen {
+  0%   { transform: scale(1) translateY(0);      opacity: 1; }
+  45%  { transform: scale(1.05) translateY(-10px); opacity: 1; }
+  100% { transform: scale(1.12) translateY(-22px); opacity: 0; }
+}
+
+/* 花卉線稿 SVG */
+.env-floral {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+}
+
+/* 封蠟印章 */
+.env-seal {
+  width: 54px; height: 54px; border-radius: 50%;
+  background: var(--br);
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 22px;
+  font-size: 22px; color: #fff;
+  position: relative; z-index: 1;
+  box-shadow: 0 4px 16px rgba(123,79,46,.4);
+}
+.env-names {
+  font-family: 'Noto Serif TC', serif;
+  font-size: 30px; color: var(--txt);
+  letter-spacing: 5px; line-height: 1.55;
+  position: relative; z-index: 1;
+  margin-bottom: 0;
+}
+.env-amp {
+  font-family: 'Great Vibes', cursive;
+  font-size: 20px; color: var(--br-light);
+  display: block; line-height: 2;
+}
+.env-divider-line {
+  display: flex; align-items: center; gap: 10px;
+  margin: 14px 0 14px;
+  position: relative; z-index: 1;
+}
+.env-divider-line::before, .env-divider-line::after {
+  content: ''; flex: 1; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(196,137,90,.45), transparent);
+}
+.env-divider-line span { font-size: 12px; color: var(--br-light); }
+.env-date {
+  font-size: 13px; color: var(--txt-mid);
+  letter-spacing: 2px; margin-bottom: 18px;
+  position: relative; z-index: 1;
+}
+.env-invite {
+  font-size: 13px; color: var(--txt-mid);
+  letter-spacing: 4px; margin-bottom: 10px;
+  position: relative; z-index: 1;
+}
+.env-guest {
+  display: inline-block;
+  border: 1px solid rgba(196,137,90,.45);
+  border-radius: 6px; padding: 5px 20px;
+  font-size: 16px; color: var(--txt);
+  letter-spacing: 2px; margin-bottom: 10px;
+  position: relative; z-index: 1;
+}
+.env-sub {
+  font-size: 12px; color: var(--txt-mid);
+  letter-spacing: 2px; margin-bottom: 28px;
+  position: relative; z-index: 1;
+}
+.env-open-btn {
+  position: relative; z-index: 1;
+  background: var(--br); color: #fff; border: none;
+  padding: 13px 42px; border-radius: 30px; font-size: 15px;
+  font-family: 'Noto Sans TC', sans-serif; font-weight: 700;
+  cursor: pointer; letter-spacing: 3px;
+  box-shadow: 0 5px 18px rgba(123,79,46,.4);
+  transition: background .2s, transform .15s;
+}
+.env-open-btn:hover  { background: #5A3520; transform: scale(1.04); }
+.env-open-btn:active { transform: scale(.97); }
 </style>
 </head>
-<body>
+<body class="intro-lock">
 
-<!-- ── NAV ── -->
-<nav class="nav">
-  <div class="nav-title">Juju &amp; Frank's Wedding</div>
-  <a href="#rsvp" class="nav-btn">我要參加</a>
-</nav>
+<!-- ── ENVELOPE INTRO ── -->
+<div id="envIntro">
+  <div class="env-cover" id="envCover">
+
+    <!-- 花卉線稿（左右裝飾） -->
+    <svg class="env-floral" viewBox="0 0 320 520" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+      <g opacity=".18" stroke="#9B6540" stroke-width="1.4" fill="none" stroke-linecap="round">
+        <!-- 左側花萁 -->
+        <path d="M-5,520 Q18,430 22,360 Q28,290 10,220"/>
+        <path d="M10,220 Q4,170 18,125"/>
+        <path d="M22,340 Q-8,310 -2,278"/>
+        <path d="M16,270 Q-10,248 4,222"/>
+        <!-- 左大花 -->
+        <circle cx="18" cy="125" r="22"/>
+        <ellipse cx="18" cy="103" rx="8" ry="13"/>
+        <ellipse cx="18" cy="147" rx="8" ry="13"/>
+        <ellipse cx="-4" cy="125" rx="13" ry="8"/>
+        <ellipse cx="40" cy="125" rx="13" ry="8"/>
+        <ellipse cx="2" cy="109" rx="8" ry="12" transform="rotate(-45 2 109)"/>
+        <ellipse cx="34" cy="141" rx="8" ry="12" transform="rotate(-45 34 141)"/>
+        <ellipse cx="2" cy="141" rx="8" ry="12" transform="rotate(45 2 141)"/>
+        <ellipse cx="34" cy="109" rx="8" ry="12" transform="rotate(45 34 109)"/>
+        <circle cx="18" cy="125" r="6"/>
+        <!-- 左花苞 -->
+        <ellipse cx="8" cy="195" rx="7" ry="11" transform="rotate(20 8 195)"/>
+        <!-- 左小花 -->
+        <circle cx="-2" cy="250" r="14"/>
+        <ellipse cx="-2" cy="236" rx="5" ry="9"/>
+        <ellipse cx="-2" cy="264" rx="5" ry="9"/>
+        <ellipse cx="-16" cy="250" rx="9" ry="5"/>
+        <ellipse cx="12" cy="250" rx="9" ry="5"/>
+        <circle cx="-2" cy="250" r="4"/>
+      </g>
+      <!-- 右側花萁（釡像） -->
+      <g opacity=".18" stroke="#9B6540" stroke-width="1.4" fill="none" stroke-linecap="round" transform="scale(-1,1) translate(-320,0)">
+        <path d="M-5,520 Q18,430 22,360 Q28,290 10,220"/>
+        <path d="M10,220 Q4,170 18,125"/>
+        <path d="M22,340 Q-8,310 -2,278"/>
+        <path d="M16,270 Q-10,248 4,222"/>
+        <circle cx="18" cy="125" r="22"/>
+        <ellipse cx="18" cy="103" rx="8" ry="13"/>
+        <ellipse cx="18" cy="147" rx="8" ry="13"/>
+        <ellipse cx="-4" cy="125" rx="13" ry="8"/>
+        <ellipse cx="40" cy="125" rx="13" ry="8"/>
+        <ellipse cx="2" cy="109" rx="8" ry="12" transform="rotate(-45 2 109)"/>
+        <ellipse cx="34" cy="141" rx="8" ry="12" transform="rotate(-45 34 141)"/>
+        <ellipse cx="2" cy="141" rx="8" ry="12" transform="rotate(45 2 141)"/>
+        <ellipse cx="34" cy="109" rx="8" ry="12" transform="rotate(45 34 109)"/>
+        <circle cx="18" cy="125" r="6"/>
+        <ellipse cx="8" cy="195" rx="7" ry="11" transform="rotate(20 8 195)"/>
+        <circle cx="-2" cy="250" r="14"/>
+        <ellipse cx="-2" cy="236" rx="5" ry="9"/>
+        <ellipse cx="-2" cy="264" rx="5" ry="9"/>
+        <ellipse cx="-16" cy="250" rx="9" ry="5"/>
+        <ellipse cx="12" cy="250" rx="9" ry="5"/>
+        <circle cx="-2" cy="250" r="4"/>
+      </g>
+    </svg>
+
+    <div class="env-seal">♥</div>
+    <div class="env-names">如娟<span class="env-amp">&amp;</span>凱詳</div>
+    <div class="env-divider-line"><span>&#10038;</span></div>
+    <div class="env-date">2027 年 5 月 30 日</div>
+    <div class="env-invite">敬邀您</div>
+    <div class="env-sub">蒞臨參加我們的婚宴</div>
+    <button class="env-open-btn" onclick="openEnvelope()">開啟喜帖</button>
+  </div>
+</div>
+
+<!-- ── NAV（隱藏標題列，僅留佔位高度用於錨點偏移）── -->
+<nav class="nav" style="display:none"></nav>
 
 <!-- ── HERO ── -->
 <section id="hero">
   <div class="hero-bg"></div>
   <div class="hero-content">
-    <div class="hero-cnt" id="heroCnt"></div>
     <div class="hero-names">Juju &amp; Frank</div>
     <div class="hero-date">2027 / 5 / 30（日）12:00</div>
+    <a href="#rsvp" class="nav-btn" style="margin-top:28px;padding:12px 36px;font-size:15px;border-radius:28px;letter-spacing:3px;animation:heroUp .9s ease 1s both">我要參加</a>
+  </div>
+  <div class="hero-scroll">
+    <div class="hero-scroll-line"></div>
+    <div class="hero-scroll-txt">喜帖下滑</div>
   </div>
 </section>
 
@@ -370,7 +616,7 @@ footer   { background: var(--br); padding: 24px 20px; text-align: center; }
 <!-- ── RSVP ── -->
 <section id="rsvp">
   <div class="in">
-    <div class="sec-title rv">出席統計</div>
+    <div class="sec-title rv">參加調查</div>
     <div class="rsvp-card rv-sc d2">
       <div class="rsvp-avatar">👰</div>
       <div class="rsvp-name">如娟在奔起 👰</div>
@@ -391,7 +637,7 @@ footer   { background: var(--br); padding: 24px 20px; text-align: center; }
 <div class="tf-ov" id="tfOv">
   <div class="tf-top">
     <div class="tf-top-row">
-      <span class="tf-top-title">出席統計</span>
+      <span class="tf-top-title">參加調查</span>
       <button class="tf-close" onclick="closeTF()">✕</button>
     </div>
     <div class="tf-prog-track">
@@ -459,6 +705,15 @@ footer   { background: var(--br); padding: 24px 20px; text-align: center; }
         <button class="tf-num" onclick="pickNum(this,9)">9</button>
         <button class="tf-num" onclick="pickNum(this,10)">10</button>
       </div>
+      <button class="tf-ok" onclick="goNext(5)">OK ✓</button>
+    </div>
+
+    <!-- Q5 備註 -->
+    <div class="tf-step" id="s5">
+      <div class="tf-q-num">5 →</div>
+      <div class="tf-q-text">備註（選填）</div>
+      <div class="tf-q-hint">歡迎留下幸福小語 🌸，或告知飲食需求（素食、過敏等）🌿</div>
+      <textarea class="tf-textarea" id="fRemark" rows="4" placeholder="Type your answer here.."></textarea>
       <button class="tf-ok" onclick="submitForm()">OK ✓</button>
     </div>
 
@@ -481,26 +736,41 @@ footer   { background: var(--br); padding: 24px 20px; text-align: center; }
   </div>
 </div>
 
+<!-- ── USAGI MASCOT ── -->
+<div class="usagi-float">
+  <div class="usagi-inner" onclick="scrollToRSVP()" title="填寫參加調查">
+      <div class="usagi-bubble">我那天也會到場呦！</div>
+    <img class="usagi-svg" src="img/usagi.png" alt="烏薩奇">
+  </div>
+</div>
+
 <script>
-// ── HERO 倒數（Days / Hours / Min）──
-function renderCnt() {
-  const t = new Date('2027-05-30T12:00:00'), n = new Date(), d = t - n;
-  if (d <= 0) {
-    document.getElementById('heroCnt').innerHTML = '<div style="color:rgba(255,255,255,.85);font-size:14px;letter-spacing:3px">幸福已到來 🌸</div>';
-    return;
+// ── ENVELOPE INTRO ──
+(function() {
+  // 生成飄落花瓣
+  const intro = document.getElementById('envIntro');
+  for (let i = 0; i < 18; i++) {
+    const p = document.createElement('div');
+    p.className = 'petal';
+    const size = 6 + Math.random() * 10;
+    p.style.cssText = `
+      left:${Math.random()*100}%;
+      width:${size}px; height:${size}px;
+      animation-duration:${4.5 + Math.random()*5}s;
+      animation-delay:${Math.random()*7}s;
+    `;
+    intro.prepend(p);
   }
-  const days  = Math.floor(d / 86400000);
-  const hours = Math.floor((d % 86400000) / 3600000);
-  const mins  = Math.floor((d % 3600000)  / 60000);
-  document.getElementById('heroCnt').innerHTML = `
-    <div class="h-unit"><span class="h-num">${String(days).padStart(2,'0')}</span><span class="h-lbl">Days</span></div>
-    <span class="h-sep">:</span>
-    <div class="h-unit"><span class="h-num">${String(hours).padStart(2,'0')}</span><span class="h-lbl">Hours</span></div>
-    <span class="h-sep">:</span>
-    <div class="h-unit"><span class="h-num">${String(mins).padStart(2,'0')}</span><span class="h-lbl">Min</span></div>`;
+})();
+
+function openEnvelope() {
+  const cover = document.getElementById('envCover');
+  cover.classList.add('opening');
+  setTimeout(() => {
+    document.getElementById('envIntro').classList.add('hide');
+    document.body.classList.remove('intro-lock');
+  }, 900);
 }
-renderCnt();
-setInterval(renderCnt, 60000);
 
 // Hero Ken Burns 效果
 setTimeout(() => document.getElementById('hero').classList.add('loaded'), 50);
@@ -546,9 +816,9 @@ document.querySelectorAll('.rv, .rv-l, .rv-r, .rv-sc').forEach(el => obs.observe
 
 // ── TYPEFORM 邏輯 ──
 const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbygDHk9DStPmwJaklv4GM8jffvJVSsIdzjM2ydQZGKk4n_v-OgZgFpXFZboS2HREDmukw/exec';
-const TOTAL = 4;
+const TOTAL = 5;
 let cur = 1;
-const ans = { name: '', attend: '', side: '', count: 0 };
+const ans = { name: '', attend: '', side: '', count: 0, remark: '' };
 
 function openTF()  { document.getElementById('tfOv').classList.add('open'); document.body.style.overflow = 'hidden'; showStep(1); }
 function closeTF() { document.getElementById('tfOv').classList.remove('open'); document.body.style.overflow = ''; }
@@ -595,14 +865,19 @@ function pickNum(el, n) {
 function submitForm() {
   if (!ans.count) { alert('請選擇人數'); return; }
   ans.name = document.getElementById('fName').value.trim();
+  ans.remark = document.getElementById('fRemark').value.trim();
   const cbName = 'cb_' + Date.now();
-  const params = new URLSearchParams({ callback: cbName, name: ans.name, attend: ans.attend, count: ans.count, note: ans.side });
+  const params = new URLSearchParams({ callback: cbName, name: ans.name, attend: ans.attend, count: ans.count, note: ans.side, remark: ans.remark });
   window[cbName] = function() { delete window[cbName]; };
   const s = document.createElement('script');
   s.src = SCRIPT_URL + '?' + params.toString();
   s.onerror = () => {};
   document.body.appendChild(s);
   showStep('done');
+}
+
+function scrollToRSVP() {
+  document.getElementById('rsvp').scrollIntoView({ behavior: 'smooth' });
 }
 </script>
 </body>
