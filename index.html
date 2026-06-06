@@ -270,10 +270,10 @@ footer   { background: var(--br); padding: 24px 20px; text-align: center; }
   pointer-events: none; opacity: 0;
 }
 @keyframes petalFall {
-  0%   { transform: translateY(-40px) rotate(0deg); opacity: 0; }
-  12%  { opacity: 1; }
-  88%  { opacity: .5; }
-  100% { transform: translateY(108vh) rotate(500deg) translateX(20px); opacity: 0; }
+  0%   { transform: translateY(0) rotate(0deg); opacity: 0; }
+  8%   { opacity: 1; }
+  90%  { opacity: .5; }
+  100% { transform: translateY(110vh) rotate(520deg) translateX(24px); opacity: 0; }
 }
 
 /* 封面卡片 */
@@ -737,6 +737,7 @@ footer   { background: var(--br); padding: 24px 20px; text-align: center; }
     p.className = 'petal';
     const size = 6 + Math.random() * 10;
     p.style.cssText = `
+      top: -16px;
       left:${Math.random()*100}%;
       width:${size}px; height:${size}px;
       animation-duration:${4.5 + Math.random()*5}s;
