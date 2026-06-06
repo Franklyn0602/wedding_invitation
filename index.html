@@ -160,22 +160,11 @@ body.intro-lock { overflow: hidden; }
 .map-box iframe { width: 100%; height: 100%; border: none; }
 .map-ph      { width: 100%; height: 100%; background: linear-gradient(135deg, #C0B0A0, #8B7B6B); display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,.7); font-size: 13px; letter-spacing: 2px; }
 
-/* ── VENUE ── */
-#venue       { position: relative; height: 320px; overflow: hidden; }
-.venue-bg    {
-  position: absolute; inset: 0;
-  background:
-    linear-gradient(180deg, rgba(25,15,8,.2) 0%, rgba(25,15,8,.5) 100%),
-    linear-gradient(135deg, #7B9B6A 0%, #5A7A4A 30%, #8B7060 60%, #6A8060 100%);
-  background-size: cover; background-position: center;
-  transform: scale(1.05); transition: transform .8s ease;
-}
-#venue:hover .venue-bg { transform: scale(1.02); }
-.venue-cnt   { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #fff; text-align: center; }
-.venue-zh    { font-family: 'Noto Serif TC', serif; font-size: 30px; letter-spacing: 6px; margin-bottom: 6px; text-shadow: 0 1px 12px rgba(0,0,0,.4); }
-.venue-en    { font-size: 11px; letter-spacing: 7px; color: rgba(255,255,255,.72); margin-bottom: 22px; }
-.venue-cta   { border: 1px solid rgba(255,255,255,.65); background: rgba(255,255,255,.15); backdrop-filter: blur(4px); color: #fff; padding: 9px 28px; border-radius: 24px; font-size: 13px; cursor: pointer; font-family: 'Noto Sans TC', sans-serif; letter-spacing: 2px; transition: background .2s; }
-.venue-cta:hover { background: rgba(255,255,255,.25); }
+/* ── VENUE TITLE ── */
+#venue-title { background: var(--cream-lt); padding: 64px 24px 56px; text-align: center; }
+#venue-title .in { max-width: 440px; margin: 0 auto; }
+.venue-t-name { font-family: 'Noto Serif TC', serif; font-size: 18px; color: rgba(255,255,255,.9); letter-spacing: 3px; margin-bottom: 8px; }
+.venue-t-addr { font-size: 13px; color: rgba(255,255,255,.65); letter-spacing: 1px; line-height: 2; }
 
 /* ── RSVP ── */
 #rsvp        { background: var(--cream-lt); padding: 72px 24px; }
@@ -251,7 +240,7 @@ footer   { background: var(--br); padding: 24px 20px; text-align: center; }
   50%       { transform: translateY(-11px); }
 }
 .usagi-bubble {
-  position: absolute; bottom: calc(100% + 10px); right: 0;
+  position: absolute; bottom: calc(100% + 10px); right: 10px;
   background: #fff; border: 1.5px solid #E5DDD5;
   border-radius: 14px 14px 4px 14px;
   padding: 8px 14px; font-size: 12px; color: var(--txt);
@@ -261,7 +250,8 @@ footer   { background: var(--br); padding: 24px 20px; text-align: center; }
   transition: opacity .25s, transform .25s;
   pointer-events: none;
 }
-.usagi-inner:hover .usagi-bubble { opacity: 1; transform: translateY(0) scale(1); }
+.usagi-inner:hover .usagi-bubble,
+.usagi-inner.show .usagi-bubble { opacity: 1; transform: translateY(0) scale(1); }
 
 /* ── ENVELOPE INTRO ── */
 #envIntro {
@@ -277,7 +267,7 @@ footer   { background: var(--br); padding: 24px 20px; text-align: center; }
 .petal {
   position: absolute; border-radius: 50% 0 50% 0;
   background: rgba(255,210,200,.28); animation: petalFall linear infinite;
-  pointer-events: none;
+  pointer-events: none; opacity: 0;
 }
 @keyframes petalFall {
   0%   { transform: translateY(-40px) rotate(0deg); opacity: 0; }
@@ -480,7 +470,6 @@ footer   { background: var(--br); padding: 24px 20px; text-align: center; }
 <section id="welcome">
   <div class="in">
     <h1 class="rv">Welcome To<br>Our Wedding</h1>
-    <div class="date-tag rv d1">2027/5/30，星期日 12:00</div>
     <div class="rings-wrap rv d2">
       <div class="arch"></div>
       <svg class="rings-svg" viewBox="0 0 110 110" fill="none">
@@ -556,12 +545,11 @@ footer   { background: var(--br); padding: 24px 20px; text-align: center; }
 <!-- ── TRANSPORT ── -->
 <section id="transport">
   <div class="in">
-    <div class="sec-title rv">交通方式</div>
-    <div style="font-size:13px;color:rgba(255,255,255,.7);letter-spacing:1px;margin-bottom:28px;line-height:1.8" class="rv">
-      📍 新北市板橋區中山路一段161號 1F &amp; 8F<br>
-      <span style="color:rgba(255,255,255,.45);font-size:12px">（新北市政府內）電話：02-2952-7666</span>
-    </div>
-
+    <div class="sec-title rv">婚宴地點</div>
+    <div class="venue-t-name rv d1">彭園新板館、1 樓室會 A 廳</div>
+    <div class="venue-t-addr rv d2">新北市板橋區中山路一段 161 號<br>（新北市政府內）　2-2952-7666</div>
+    <div style="width:48px;height:1px;background:rgba(255,255,255,.22);margin:24px 0 28px"></div>
+    <div class="sec-title rv" style="font-size:18px;margin-bottom:20px">交通方式</div>
     <div class="trans-item rv d1">
       <div class="trans-title">捷運</div>
       <ul class="trans-list">
@@ -605,15 +593,6 @@ footer   { background: var(--br); padding: 24px 20px; text-align: center; }
   </div>
 </section>
 
-<!-- ── VENUE ── -->
-<section id="venue">
-  <div class="venue-bg"></div>
-  <div class="venue-cnt">
-    <div class="venue-zh rv">彭園新板館</div>
-    <div class="venue-en rv d1">1 樓宴會 A 廳</div>
-    <a class="venue-cta rv d2" href="https://www.pengyuan.com.tw/branch/rooms_detail/xinban/25" target="_blank" rel="noopener">查看場地</a>
-  </div>
-</section>
 
 <!-- ── RSVP ── -->
 <section id="rsvp">
@@ -740,7 +719,7 @@ footer   { background: var(--br); padding: 24px 20px; text-align: center; }
 
 <!-- ── USAGI MASCOT ── -->
 <div class="usagi-float">
-  <div class="usagi-inner" title="烏薩奇">
+  <div class="usagi-inner" title="烏薩奇" onclick="this.classList.toggle('show')">
       <div class="usagi-bubble">我那天也會到場呦！</div>
     <img class="usagi-svg" src="img/usagi.png" alt="烏薩奇">
   </div>
@@ -880,6 +859,10 @@ function submitForm() {
 
 function scrollToRSVP() {
   document.getElementById('rsvp').scrollIntoView({ behavior: 'smooth' });
+}
+
+function toggleUsagiBubble(el) {
+  el.classList.toggle('show');
 }
 </script>
 </body>
