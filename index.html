@@ -866,13 +866,18 @@ function scrollToRSVP() {
 
 function toggleUsagiBubble(e, el) {
   e.stopPropagation();
+  e.preventDefault();
   el.classList.toggle('show');
   const img = document.getElementById('usagiImg');
   img.src = el.classList.contains('show') ? 'img/537-2.webp' : 'img/537-1.webp';
 }
 function closeUsagiBubble(e) {
   if (!e.target.closest('.usagi-float')) {
-    document.querySelector('.usagi-inner')?.classList.remove('show');
+    const el = document.querySelector('.usagi-inner');
+    if (el && el.classList.contains('show')) {
+      el.classList.remove('show');
+      document.getElementById('usagiImg').src = 'img/537-1.webp';
+    }
   }
 }
 document.addEventListener('click', closeUsagiBubble);
