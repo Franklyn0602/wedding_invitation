@@ -197,11 +197,15 @@ footer   { background: var(--br); padding: 24px 20px; text-align: center; }
 .tf-top-row   { display: flex; justify-content: space-between; align-items: center; padding: 14px 20px; }
 .tf-top-title { font-size: 16px; font-weight: 700; color: var(--txt); }
 .tf-close     { background: none; border: none; font-size: 22px; color: #BBB; cursor: pointer; line-height: 1; padding: 0 4px; }
+.tf-back-btn  { background: var(--br); color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-size: 13px; font-family: 'Noto Sans TC', sans-serif; font-weight: 700; cursor: pointer; transition: background .2s; letter-spacing: 1px; }
+.tf-back-btn:hover { background: var(--br-mid); }
 .tf-prog-track { height: 3px; background: #EEE; }
 .tf-prog-fill  { height: 100%; background: linear-gradient(90deg, var(--br-light), var(--br-mid)); transition: width .4s ease; }
-.tf-body  { flex: 1; overflow-y: auto; }
+.tf-body  { flex: 1; overflow-y: auto; position: relative; }
 .tf-step  { display: none; padding: 44px 28px 28px; max-width: 480px; margin: 0 auto; animation: stepIn .35s ease; }
 .tf-step.on { display: block; }
+#sDone { position: absolute; inset: 0; max-width: none; margin: 0; padding: 20px; animation: none; }
+#sDone.on { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
 @keyframes stepIn { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: translateY(0); } }
 .tf-q-num  { font-size: 12px; color: #C0B0A0; margin-bottom: 14px; letter-spacing: 1px; }
 .tf-q-text { font-size: 19px; font-weight: 700; color: var(--txt); margin-bottom: 8px; line-height: 1.5; }
@@ -591,10 +595,7 @@ footer   { background: var(--br); padding: 24px 20px; text-align: center; }
     </div>
 
     <div class="map-box rv d5">
-      <iframe
-        src="https://maps.google.com/maps?q=新北市板橋區中山路一段161號&output=embed&z=16"
-        allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade"
-        title="新板彭園會館地圖"></iframe>
+      <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3615.6419051811476!2d121.46296197587138!3d25.012281139164795!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3442a81ed5976a59%3A0x7a7f99a0015bfa6d!2z5b2t5ZyS5paw5p2_6aSo!5e0!3m2!1szh-TW!2stw!4v1780829109401!5m2!1szh-TW!2stw" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
     </div>
   </div>
 </section>
@@ -624,8 +625,7 @@ footer   { background: var(--br); padding: 24px 20px; text-align: center; }
 <div class="tf-ov" id="tfOv">
   <div class="tf-top">
     <div class="tf-top-row">
-      <span class="tf-top-title">參加調查</span>
-      <button class="tf-close" onclick="closeTF()">✕</button>
+      <button class="tf-back-btn" onclick="closeTF()">← 返回喜帖</button>
     </div>
     <div class="tf-prog-track">
       <div class="tf-prog-fill" id="tfBar" style="width:0%"></div>
@@ -635,7 +635,7 @@ footer   { background: var(--br); padding: 24px 20px; text-align: center; }
   <div class="tf-body">
     <!-- Q1 姓名 -->
     <div class="tf-step on" id="s1">
-      <div class="tf-q-num">1 →</div>
+      <div class="tf-q-num">1 / 5</div>
       <div class="tf-q-text">您的中文大名 *</div>
       <input class="tf-input" id="fName" type="text" placeholder="Type your answer here..">
       <button class="tf-ok" onclick="goNext(2)">OK ✓</button>
@@ -643,13 +643,13 @@ footer   { background: var(--br); padding: 24px 20px; text-align: center; }
 
     <!-- Q2 出席 -->
     <div class="tf-step" id="s2">
-      <div class="tf-q-num">2 →</div>
+      <div class="tf-q-num">2 / 5</div>
       <div class="tf-q-text">請問 2027/5/30 午宴是否方便出席？ *</div>
       <div class="tf-opts">
         <div class="tf-opt" onclick="pick(this,'attend','肯定出席');goNext(3)">
           <div class="tf-opt-key">A</div><div class="tf-opt-text">肯定出席</div>
         </div>
-        <div class="tf-opt" onclick="pick(this,'attend','可惜無法出席');goNext(3)">
+        <div class="tf-opt" onclick="pick(this,'attend','可惜無法出席');goSkipDone()">
           <div class="tf-opt-key">B</div><div class="tf-opt-text">可惜無法出席 😔</div>
         </div>
       </div>
@@ -657,7 +657,7 @@ footer   { background: var(--br); padding: 24px 20px; text-align: center; }
 
     <!-- Q3 哪方 -->
     <div class="tf-step" id="s3">
-      <div class="tf-q-num">3 →</div>
+      <div class="tf-q-num">3 / 5</div>
       <div class="tf-q-text">您是哪方的家人/朋友？ *</div>
       <div class="tf-opts">
         <div class="tf-opt" onclick="pick(this,'side','男方家人');goNext(4)">
@@ -677,7 +677,7 @@ footer   { background: var(--br); padding: 24px 20px; text-align: center; }
 
     <!-- Q4 人數 -->
     <div class="tf-step" id="s4">
-      <div class="tf-q-num">4 →</div>
+      <div class="tf-q-num">4 / 5</div>
       <div class="tf-q-text">請問共有幾位成員一同參加？ *</div>
       <div class="tf-q-hint">請包含自己的人數並以一個家庭為單位，因場地空間有限，確認人數後將不再更動喔～</div>
       <div class="tf-num-grid">
@@ -695,32 +695,29 @@ footer   { background: var(--br); padding: 24px 20px; text-align: center; }
       <button class="tf-ok" onclick="goNext(5)">OK ✓</button>
     </div>
 
-    <!-- Q5 備註 -->
+    <!-- Q5 飲食偏好 -->
     <div class="tf-step" id="s5">
-      <div class="tf-q-num">5 →</div>
-      <div class="tf-q-text">備註（選填）</div>
-      <div class="tf-q-hint">歡迎留下幸福小語 🌸，或告知飲食需求（素食、過敏等）🌿</div>
-      <textarea class="tf-textarea" id="fRemark" rows="4" placeholder="Type your answer here.."></textarea>
-      <button class="tf-ok" onclick="submitForm()">OK ✓</button>
+      <div class="tf-q-num">5 / 5</div>
+      <div class="tf-q-text">您的飲食偏好？ *</div>
+      <div class="tf-opts">
+        <div class="tf-opt" onclick="pick(this,'remark','葷食');submitForm()">
+          <div class="tf-opt-key">A</div><div class="tf-opt-text">葷食</div>
+        </div>
+        <div class="tf-opt" onclick="pick(this,'remark','素食');submitForm()">
+          <div class="tf-opt-key">B</div><div class="tf-opt-text">素食</div>
+        </div>
+      </div>
     </div>
 
     <!-- 完成 -->
     <div class="tf-step" id="sDone">
-      <div style="text-align:center;padding:40px 0">
-        <div style="font-size:60px;margin-bottom:22px">🌸</div>
-        <div style="font-size:22px;font-weight:700;color:var(--txt);margin-bottom:12px">感謝您的回覆！</div>
-        <div style="font-size:14px;color:var(--txt-mid);line-height:2">期待與您共享這美好時刻</div>
-      </div>
+      <img id="doneImg" src="" alt="" style="width:min(200px,40vw);max-height:35vh;object-fit:contain;display:block">
+      <div id="doneBig" style="font-size:19px;font-weight:700;color:var(--txt);margin-bottom:14px;line-height:1.7"></div>
+      <div id="doneSmall" style="font-size:14px;color:var(--txt-mid);line-height:2"></div>
     </div>
   </div>
 
-  <div class="tf-foot">
-    <div class="tf-navs">
-      <button class="tf-nav" onclick="prevStep()" title="上一題">▲</button>
-      <button class="tf-nav" onclick="nextStep()" title="下一題">▼</button>
-    </div>
-    <div class="tf-pow">Powered by ♡</div>
-  </div>
+
 </div>
 
 <!-- ── USAGI MASCOT ── -->
@@ -730,7 +727,7 @@ footer   { background: var(--br); padding: 24px 20px; text-align: center; }
     ontouchend="toggleUsagiBubble(event, this)">
       <div class="usagi-bubble">我那天也會到場呦！</div>
     <img class="usagi-svg" id="usagiImg" src="img/537-1.webp" alt="烏薩奇"
-      onmouseenter="if(!this.closest('.usagi-inner').classList.contains('show')) this.src='img/537-2.webp'"
+      onmouseenter="if(!this.closest('.usagi-inner').classList.contains('show')) this.src='img/537-6胖胖.webp'"
       onmouseleave="if(!this.closest('.usagi-inner').classList.contains('show')) this.src='img/537-1.webp'">
   </div>
 </div>
@@ -828,6 +825,16 @@ function showStep(n) {
   cur = (n === 'done') ? TOTAL + 1 : n;
   setBar(cur);
   document.querySelector('.tf-body').scrollTop = 0;
+  if (n === 'done') {
+    const attending = ans.attend === '肯定出席';
+    document.getElementById('doneImg').src = attending ? 'img/537問卷參加圖片.webp' : 'img/537問卷不參加圖片.webp';
+    document.getElementById('doneBig').textContent = attending
+      ? '感謝您在特別的日子裡，願意前來為我們送上祝福！'
+      : '衷心感謝您的回覆與遠道而來的祝福';
+    document.getElementById('doneSmall').textContent = attending
+      ? '您的出席是我們最大的榮幸，期待與您相聚。'
+      : '遺憾因行程未能相聚，但您的心意我們已珍藏在心，祝您順心平安。';
+  }
 }
 
 function goNext(n) {
@@ -856,10 +863,16 @@ function pickNum(el, n) {
   ans.count = n;
 }
 
+function goSkipDone() {
+  ans.count = 0;
+  ans.side = '';
+  ans.remark = '';
+  submitForm();
+}
+
 function submitForm() {
-  if (!ans.count) { alert('請選擇人數'); return; }
+  if (ans.attend !== '可惜無法出席' && !ans.count) { alert('請選擇人數'); return; }
   ans.name = document.getElementById('fName').value.trim();
-  ans.remark = document.getElementById('fRemark').value.trim();
   const cbName = 'cb_' + Date.now();
   const params = new URLSearchParams({ callback: cbName, name: ans.name, attend: ans.attend, count: ans.count, note: ans.side, remark: ans.remark });
   window[cbName] = function() { delete window[cbName]; };
@@ -867,13 +880,12 @@ function submitForm() {
   s.src = SCRIPT_URL + '?' + params.toString();
   s.onerror = () => {};
   document.body.appendChild(s);
+  showStep('done');
   // 清除填寫內容
   document.getElementById('fName').value = '';
-  document.getElementById('fRemark').value = '';
   document.querySelectorAll('.tf-opt.sel').forEach(o => o.classList.remove('sel'));
   document.querySelectorAll('.tf-num.sel').forEach(b => b.classList.remove('sel'));
   Object.assign(ans, { name: '', attend: '', side: '', count: 0, remark: '' });
-  showStep('done');
 }
 
 function scrollToRSVP() {
