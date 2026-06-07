@@ -186,9 +186,12 @@ body.intro-lock { overflow: hidden; }
 .rsvp-btn:hover { background: var(--br); transform: scale(1.02); }
 
 /* ── FOOTER ── */
-footer   { background: var(--br); padding: 24px 20px; text-align: center; }
-.ft-ig   { display: inline-flex; align-items: center; gap: 6px; color: rgba(255,255,255,.8); text-decoration: none; font-size: 14px; margin-bottom: 8px; }
-.ft-text { font-size: 12px; color: rgba(255,255,255,.45); letter-spacing: 2px; }
+footer   { background: var(--cream-lt); padding: 28px 28px; border-top: 1px solid rgba(139,94,60,.12); }
+.ft-left  { }
+.ft-brand { font-family: 'Great Vibes', cursive; font-size: 22px; color: var(--br); margin-bottom: 4px; }
+.ft-sub   { font-size: 12px; color: var(--txt-mid); letter-spacing: 2px; margin-bottom: 16px; }
+.ft-cta   { font-size: 14px; color: var(--txt-mid); letter-spacing: 1px; display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; }
+.ft-cta a { color: var(--br); font-weight: 700; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
 
 /* ── TYPEFORM OVERLAY ── */
 .tf-ov { display: none; position: fixed; inset: 0; z-index: 2000; flex-direction: column; background: var(--cream-lt); }
@@ -494,9 +497,9 @@ footer   { background: var(--br); padding: 24px 20px; text-align: center; }
     <div class="div-w rv d4"></div>
     <div class="host-lbl rv d4">主婚人</div>
     <div class="host-tbl rv d5">
-      <div class="host-col">[女方父]<br>[女方母]</div>
+      <div class="host-col">羅元呈<br>廖梅芳</div>
       <div class="host-sep"></div>
-      <div class="host-col">[男方父]<br>[男方母]</div>
+      <div class="host-col">江宏彬<br>黃明喜</div>
     </div>
     <div class="w-invite rv d6">敬邀</div>
   </div>
@@ -510,9 +513,10 @@ footer   { background: var(--br); padding: 24px 20px; text-align: center; }
     <div class="carousel rv d2" id="photoCarousel">
       <div class="car-track" id="carTrack">
         <!-- 替換 src 為實際婚紗照路徑，可新增或刪除 car-slide -->
-        <div class="car-slide"><div class="car-ph">📷</div></div>
-        <div class="car-slide"><div class="car-ph">📷</div></div>
-        <div class="car-slide"><div class="car-ph">📷</div></div>
+        <div class="car-slide"><img src="img/婚紗/1.jpg" alt="婚紗照1"></div>
+        <div class="car-slide"><img src="img/婚紗/2.jpg" alt="婚紗照2"></div>
+        <div class="car-slide"><img src="img/婚紗/3.jpg" alt="婚紗照3"></div>
+        <div class="car-slide"><img src="img/婚紗/4.jpg" alt="婚紗照4"></div>
       </div>
       <div class="car-dots" id="carDots"></div>
       <button class="car-btn car-prev" onclick="carMove(-1)">&#8249;</button>
@@ -602,23 +606,11 @@ footer   { background: var(--br); padding: 24px 20px; text-align: center; }
 
 
 <!-- ── RSVP ── -->
-<section id="rsvp">
-  <div class="in">
-    <div class="sec-title rv">參加調查</div>
-    <div class="rsvp-card rv-sc d2">
-      <div class="rsvp-avatar">👰</div>
-      <div class="rsvp-name">如娟在奔起 👰</div>
-      <div class="rsvp-sub">婚禮出席問卷</div>
-      <div class="rsvp-meta">⏱ Takes 1 minute</div>
-      <button class="rsvp-btn" onclick="openTF()">Start</button>
-    </div>
-  </div>
-</section>
-
-<!-- ── FOOTER ── -->
 <footer>
-  <a class="ft-ig" href="#">Instagram ↗</a><br>
-  <div class="ft-text">竭誠歡迎您 😎</div>
+  <div class="ft-cta">
+    <span>Juju &amp; Frank 彭園新板結婚典禮</span>
+    <span>｜ 是否參加？ <a onclick="openTF()">立即填寫問卷</a></span>
+  </div>
 </footer>
 
 <!-- ── TYPEFORM OVERLAY ── -->
@@ -718,6 +710,13 @@ footer   { background: var(--br); padding: 24px 20px; text-align: center; }
       <img id="doneImg" src="" alt="" style="width:min(200px,40vw);max-height:35vh;object-fit:contain;display:block">
       <div id="doneBig" style="font-size:19px;font-weight:700;color:var(--txt);margin-bottom:14px;line-height:1.7"></div>
       <div id="doneSmall" style="font-size:14px;color:var(--txt-mid);line-height:2"></div>
+      <div id="doneLineBtn" style="display:none;margin-top:22px">
+        <a href="https://line.me/R/ti/p/@479hskfh" target="_blank"
+           style="display:inline-flex;align-items:center;gap:8px;background:#06C755;color:#fff;text-decoration:none;padding:12px 28px;border-radius:30px;font-size:14px;font-family:'Noto Sans TC',sans-serif;font-weight:700;letter-spacing:2px;box-shadow:0 4px 14px rgba(6,199,85,.3)">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="#fff"><path d="M19.365 9.863c.349 0 .63.285.63.631 0 .345-.281.63-.63.63H17.61v1.125h1.755c.349 0 .63.283.63.63 0 .344-.281.629-.63.629h-2.386c-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.627-.63h2.386c.349 0 .63.285.63.63 0 .349-.281.63-.63.63H17.61v1.125h1.755zm-3.855 3.016c0 .27-.174.51-.432.596-.064.021-.131.031-.199.031-.211 0-.391-.09-.51-.25l-2.443-3.317v2.94c0 .344-.279.629-.631.629-.346 0-.626-.285-.626-.629V8.108c0-.27.173-.51.43-.595.06-.023.136-.033.194-.033.195 0 .375.104.495.254l2.462 3.33V8.108c0-.345.282-.63.63-.63.345 0 .63.285.63.63v4.771zm-5.741 0c0 .344-.282.629-.631.629-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.627-.63.349 0 .631.285.631.63v4.771zm-2.466.629H4.917c-.345 0-.63-.285-.63-.629V8.108c0-.345.285-.63.63-.63.348 0 .63.285.63.63v4.141h1.756c.348 0 .629.283.629.63 0 .344-.281.629-.629.629M24 10.314C24 4.943 18.615.572 12 .572S0 4.943 0 10.314c0 4.811 4.27 8.842 10.035 9.608.391.082.923.258 1.058.59.12.301.079.766.038 1.08l-.164 1.02c-.045.301-.24 1.186 1.049.645 1.291-.539 6.916-4.078 9.436-6.975C23.176 14.393 24 12.458 24 10.314"/></svg>
+          加入 LINE 好友
+        </a>
+      </div>
       <div id="doneAlreadyText" style="display:none;margin-top:18px;font-size:12px;color:#C0B0A0;letter-spacing:1px">您已填寫過問卷囉 ♡</div>
       <div id="doneResubmitBtn" style="display:none;margin-top:10px">
         <button onclick="resubmitForm()" style="background:none;border:1.5px solid #C0B0A0;border-radius:8px;padding:8px 18px;font-size:12px;color:#9B8070;font-family:'Noto Sans TC',sans-serif;cursor:pointer;letter-spacing:1px">資料錯誤重新填寫</button>
@@ -858,6 +857,7 @@ function showStep(n) {
     document.getElementById('doneSmall').textContent = attending
       ? '您的出席是我們最大的榮幸，期待與您相聚。'
       : '遺憾因行程未能相聚，但您的心意我們已珍藏在心，祝您順心平安。';
+    document.getElementById('doneLineBtn').style.display = attending ? 'block' : 'none';
     // doneAlreadyText / doneResubmitBtn 由呼叫端控制，不在此重設
   }
 }
