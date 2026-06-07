@@ -723,7 +723,7 @@ footer   { background: var(--br); padding: 24px 20px; text-align: center; }
     onclick="toggleUsagiBubble(event, this)"
     ontouchend="toggleUsagiBubble(event, this)">
       <div class="usagi-bubble">我那天也會到場呦！</div>
-    <img class="usagi-svg" src="img/usagi.png" alt="烏薩奇">
+    <img class="usagi-svg" id="usagiImg" src="img/537-1.webp" alt="烏薩奇">
   </div>
 </div>
 
@@ -867,6 +867,8 @@ function scrollToRSVP() {
 function toggleUsagiBubble(e, el) {
   e.stopPropagation();
   el.classList.toggle('show');
+  const img = document.getElementById('usagiImg');
+  img.src = el.classList.contains('show') ? 'img/537-2.webp' : 'img/537-1.webp';
 }
 function closeUsagiBubble(e) {
   if (!e.target.closest('.usagi-float')) {
