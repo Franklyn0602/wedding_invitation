@@ -626,6 +626,10 @@ footer   { background: var(--br); padding: 24px 20px; text-align: center; }
   <div class="tf-top">
     <div class="tf-top-row">
       <button class="tf-back-btn" onclick="closeTF()">← 返回喜帖</button>
+      <div class="tf-navs">
+        <button class="tf-nav" onclick="prevStep()" title="上一題">▲</button>
+        <button class="tf-nav" onclick="nextStep()" title="下一題">▼</button>
+      </div>
     </div>
     <div class="tf-prog-track">
       <div class="tf-prog-fill" id="tfBar" style="width:0%"></div>
@@ -714,6 +718,10 @@ footer   { background: var(--br); padding: 24px 20px; text-align: center; }
       <img id="doneImg" src="" alt="" style="width:min(200px,40vw);max-height:35vh;object-fit:contain;display:block">
       <div id="doneBig" style="font-size:19px;font-weight:700;color:var(--txt);margin-bottom:14px;line-height:1.7"></div>
       <div id="doneSmall" style="font-size:14px;color:var(--txt-mid);line-height:2"></div>
+      <div id="doneAlreadyText" style="display:none;margin-top:18px;font-size:12px;color:#C0B0A0;letter-spacing:1px">您已填寫過問卷囉 ♡</div>
+      <div id="doneResubmitBtn" style="display:none;margin-top:10px">
+        <button onclick="resubmitForm()" style="background:none;border:1.5px solid #C0B0A0;border-radius:8px;padding:8px 18px;font-size:12px;color:#9B8070;font-family:'Noto Sans TC',sans-serif;cursor:pointer;letter-spacing:1px">資料錯誤重新填寫</button>
+      </div>
     </div>
   </div>
 
@@ -811,7 +819,23 @@ const TOTAL = 5;
 let cur = 1;
 const ans = { name: '', attend: '', side: '', count: 0, remark: '' };
 
-function openTF()  { document.getElementById('tfOv').classList.add('open'); document.body.style.overflow = 'hidden'; showStep(1); }
+function openTF() {
+  document.getElementById('tfOv').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  const prev = localStorage.getItem('rsvp_submitted');
+  if (prev) {
+    // 已填過：直接顯示完成頁
+    const attending = prev === '肯定出席';
+    ans.attend = prev;
+    document.getElementById('doneAlreadyText').style.display = 'block';
+    document.getElementById('doneResubmitBtn').style.display = 'block';
+    showStep('done');
+  } else {
+    document.getElementById('doneAlreadyText').style.display = 'none';
+    document.getElementById('doneResubmitBtn').style.display = 'none';
+    showStep(1);
+  }
+}
 function closeTF() { document.getElementById('tfOv').classList.remove('open'); document.body.style.overflow = ''; }
 
 function setBar(n) {
@@ -834,6 +858,7 @@ function showStep(n) {
     document.getElementById('doneSmall').textContent = attending
       ? '您的出席是我們最大的榮幸，期待與您相聚。'
       : '遺憾因行程未能相聚，但您的心意我們已珍藏在心，祝您順心平安。';
+    // doneAlreadyText / doneResubmitBtn 由呼叫端控制，不在此重設
   }
 }
 
@@ -847,6 +872,15 @@ function goNext(n) {
 
 function prevStep() { if (cur > 1 && cur <= TOTAL) showStep(cur - 1); }
 function nextStep() {
+  // 各題驗證
+  if (cur === 1) {
+    const name = document.getElementById('fName').value.trim();
+    if (!name) { document.getElementById('fName').focus(); return; }
+  }
+  if (cur === 2 && !ans.attend) return;
+  if (cur === 3 && !ans.side)   return;
+  if (cur === 4 && !ans.count)  return;
+  if (cur === 5 && !ans.remark) return;
   if (cur < TOTAL) goNext(cur + 1);
   else if (cur === TOTAL) submitForm();
 }
@@ -873,19 +907,34 @@ function goSkipDone() {
 function submitForm() {
   if (ans.attend !== '可惜無法出席' && !ans.count) { alert('請選擇人數'); return; }
   ans.name = document.getElementById('fName').value.trim();
+  const isResubmit = localStorage.getItem('rsvp_resubmit') === '1';
+  const remarkVal = isResubmit ? (ans.remark ? ans.remark + ' (重新填寫)' : '(重新填寫)') : ans.remark;
   const cbName = 'cb_' + Date.now();
-  const params = new URLSearchParams({ callback: cbName, name: ans.name, attend: ans.attend, count: ans.count, note: ans.side, remark: ans.remark });
+  const params = new URLSearchParams({ callback: cbName, name: ans.name, attend: ans.attend, count: ans.count, note: ans.side, remark: remarkVal });
   window[cbName] = function() { delete window[cbName]; };
   const s = document.createElement('script');
   s.src = SCRIPT_URL + '?' + params.toString();
   s.onerror = () => {};
   document.body.appendChild(s);
+  localStorage.setItem('rsvp_submitted', ans.attend);
+  localStorage.removeItem('rsvp_resubmit');
   showStep('done');
+  document.getElementById('doneAlreadyText').style.display = 'none';
+  document.getElementById('doneResubmitBtn').style.display = 'block';
   // 清除填寫內容
   document.getElementById('fName').value = '';
   document.querySelectorAll('.tf-opt.sel').forEach(o => o.classList.remove('sel'));
   document.querySelectorAll('.tf-num.sel').forEach(b => b.classList.remove('sel'));
   Object.assign(ans, { name: '', attend: '', side: '', count: 0, remark: '' });
+}
+
+function resubmitForm() {
+  localStorage.setItem('rsvp_resubmit', '1');
+  localStorage.removeItem('rsvp_submitted');
+  document.getElementById('doneAlreadyText').style.display = 'none';
+  document.getElementById('doneResubmitBtn').style.display = 'none';
+  Object.assign(ans, { name: '', attend: '', side: '', count: 0, remark: '' });
+  showStep(1);
 }
 
 function scrollToRSVP() {
