@@ -292,7 +292,8 @@ footer   { background: var(--cream-lt); padding: 28px 28px; border-top: 1px soli
 /* 封面卡片 */
 .env-cover {
   position: relative;
-  width: min(320px, 88vw);
+  width: min(600px, 92vw);
+  min-height: min(500px, 77vw);
   background: #FAF7F2;
   border-radius: 16px;
   padding: 46px 28px 38px;
@@ -763,6 +764,7 @@ function openEnvelope() {
   const cover = document.getElementById('envCover');
   cover.classList.add('opening');
   setTimeout(() => {
+    window.scrollTo({ top: 0, behavior: 'instant' });
     document.getElementById('envIntro').classList.add('hide');
     document.body.classList.remove('intro-lock');
     // 觸發首頁文字進場動畫
