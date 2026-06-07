@@ -457,7 +457,7 @@ footer   { background: var(--br); padding: 24px 20px; text-align: center; }
   <div class="hero-content">
     <div class="hero-names">Juju &amp; Frank</div>
     <div class="hero-wedding">Wedding</div>
-    <div class="hero-date">2027 / 5 / 30（日）12:00</div>
+    <div class="hero-date">2027 / 5 / 30（日）午宴</div>
     <a href="#rsvp" class="nav-btn" onclick="event.preventDefault();openTF()" style="margin-top:28px;padding:12px 36px;font-size:15px;border-radius:28px;letter-spacing:3px;animation:heroUp .9s ease 1s both">我要參加</a>
   </div>
   <div class="hero-scroll">
@@ -723,7 +723,9 @@ footer   { background: var(--br); padding: 24px 20px; text-align: center; }
     onclick="toggleUsagiBubble(event, this)"
     ontouchend="toggleUsagiBubble(event, this)">
       <div class="usagi-bubble">我那天也會到場呦！</div>
-    <img class="usagi-svg" id="usagiImg" src="img/537-1.webp" alt="烏薩奇">
+    <img class="usagi-svg" id="usagiImg" src="img/537-1.webp" alt="烏薩奇"
+      onmouseenter="if(!this.closest('.usagi-inner').classList.contains('show')) this.src='img/537-2.webp'"
+      onmouseleave="if(!this.closest('.usagi-inner').classList.contains('show')) this.src='img/537-1.webp'">
   </div>
 </div>
 
@@ -857,6 +859,12 @@ function submitForm() {
   s.src = SCRIPT_URL + '?' + params.toString();
   s.onerror = () => {};
   document.body.appendChild(s);
+  // 清除填寫內容
+  document.getElementById('fName').value = '';
+  document.getElementById('fRemark').value = '';
+  document.querySelectorAll('.tf-opt.sel').forEach(o => o.classList.remove('sel'));
+  document.querySelectorAll('.tf-num.sel').forEach(b => b.classList.remove('sel'));
+  Object.assign(ans, { name: '', attend: '', side: '', count: 0, remark: '' });
   showStep('done');
 }
 
