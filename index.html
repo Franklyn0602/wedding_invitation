@@ -185,6 +185,16 @@ body.intro-lock { overflow: hidden; }
 .rsvp-btn    { background: var(--br-light); color: #fff; border: none; padding: 13px 52px; border-radius: 10px; font-size: 16px; font-family: 'Noto Sans TC', sans-serif; font-weight: 700; cursor: pointer; letter-spacing: 3px; transition: background .2s, transform .15s; }
 .rsvp-btn:hover { background: var(--br); transform: scale(1.02); }
 
+/* ── CALENDAR BTN ── */
+.cal-btn {
+  display: inline-flex; align-items: center; gap: 7px;
+  background: transparent; border: 1.5px solid rgba(139,94,60,.35);
+  color: var(--txt-mid); padding: 10px 22px; border-radius: 24px;
+  font-size: 13px; font-family: 'Noto Sans TC', sans-serif;
+  cursor: pointer; letter-spacing: 2px; transition: all .2s;
+}
+.cal-btn:hover { background: var(--br-light); color: #fff; border-color: var(--br-light); }
+
 /* ── FOOTER ── */
 footer   { background: var(--cream-lt); padding: 28px 28px; border-top: 1px solid rgba(139,94,60,.12); }
 .ft-left  { }
@@ -541,14 +551,17 @@ footer   { background: var(--cream-lt); padding: 28px 28px; border-top: 1px soli
       <div class="sched-dot"></div>
       <div class="sched-desc">🎊 婚宴開始</div>
     </div>
-    <!-- <div class="pal-head rv d4">建議著裝色系：大地色</div>
+    <div style="margin-top:28px" class="rv d3">
+      <button onclick="downloadICS()" class="cal-btn">📅 加入行事曆</button>
+    </div>
+    <div class="pal-head rv d4">建議著裝色系：大地色</div>
     <div class="pal-row rv d5">
       <div class="pal-chip" style="background:#9B8C7E"></div>
       <div class="pal-chip" style="background:#C47A5A"></div>
       <div class="pal-chip" style="background:#A0402A"></div>
       <div class="pal-chip" style="background:#C4956A"></div>
       <div class="pal-chip" style="background:#D4B896"></div>
-    </div> -->
+    </div>
   </div>
 </section>
 
@@ -606,6 +619,7 @@ footer   { background: var(--cream-lt); padding: 28px 28px; border-top: 1px soli
   <div class="ft-cta">
     <span>Juju &amp; Frank 彭園新板結婚典禮</span>
     <span>｜ 是否參加？ <a onclick="openTF()">立即填寫問卷</a></span>
+    <span>｜ <a onclick="downloadICS()">📅 加入行事曆</a></span>
   </div>
 </footer>
 
@@ -954,6 +968,34 @@ function closeUsagiBubble(e) {
 }
 document.addEventListener('click', closeUsagiBubble);
 document.addEventListener('touchend', closeUsagiBubble, { passive: true });
+
+// ── 加入行事曆 ──
+function downloadICS() {
+  const ics = [
+    'BEGIN:VCALENDAR',
+    'VERSION:2.0',
+    'PRODID:-//Juju & Frank Wedding//TW',
+    'CALSCALE:GREGORIAN',
+    'METHOD:PUBLISH',
+    'BEGIN:VEVENT',
+    'DTSTART:20270530T120000',
+    'DTEND:20270530T150000',
+    'SUMMARY:Juju & Frank 婚宴',
+    'DESCRIPTION:敬邀參加 Juju & Frank 的婚禮午宴\n彭園新板館 1F A 廳',
+    'LOCATION:彭園新板館 1F A 廳，新北市板橋區中山路一段 161 號',
+    'STATUS:CONFIRMED',
+    'END:VEVENT',
+    'END:VCALENDAR'
+  ].join('\r\n');
+
+  const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href     = url;
+  a.download = 'JujuFrank_Wedding.ics';
+  a.click();
+  URL.revokeObjectURL(url);
+}
 </script>
 </body>
 </html>
