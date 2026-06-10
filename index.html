@@ -195,6 +195,45 @@ body.intro-lock { overflow: hidden; }
 }
 .cal-btn:hover { background: var(--br-light); color: #fff; border-color: var(--br-light); }
 
+/* ── CAL MODAL ── */
+.cal-modal-bg {
+  display: none; position: fixed; inset: 0; z-index: 4000;
+  background: rgba(35,20,10,.45); backdrop-filter: blur(3px);
+  align-items: flex-end; justify-content: center;
+}
+.cal-modal-bg.open { display: flex; }
+.cal-modal {
+  background: #fff; border-radius: 20px 20px 0 0;
+  padding: 28px 24px 36px; width: 100%; max-width: 480px;
+  animation: slideUp .28s cubic-bezier(.4,0,.2,1);
+}
+@keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+.cal-modal-title {
+  font-size: 15px; font-weight: 700; color: var(--txt);
+  text-align: center; margin-bottom: 6px; letter-spacing: 1px;
+}
+.cal-modal-sub {
+  font-size: 12px; color: #C0B0A0; text-align: center;
+  margin-bottom: 22px; letter-spacing: 1px;
+}
+.cal-choices { display: flex; flex-direction: column; gap: 10px; }
+.cal-choice {
+  display: flex; align-items: center; gap: 14px;
+  border: 1.5px solid #E5DDD5; border-radius: 12px; padding: 14px 18px;
+  cursor: pointer; background: #fff; transition: border-color .2s, background .2s;
+  text-decoration: none;
+}
+.cal-choice:hover, .cal-choice:active { border-color: var(--br-mid); background: #FDF6EE; }
+.cal-choice-icon { font-size: 24px; flex-shrink: 0; }
+.cal-choice-info { display: flex; flex-direction: column; }
+.cal-choice-name { font-size: 14px; font-weight: 700; color: var(--txt); }
+.cal-choice-desc { font-size: 11px; color: #B0A090; margin-top: 2px; }
+.cal-cancel {
+  margin-top: 14px; width: 100%; background: none; border: none;
+  font-size: 14px; color: #C0B0A0; font-family: 'Noto Sans TC', sans-serif;
+  cursor: pointer; padding: 8px; letter-spacing: 2px;
+}
+
 /* ── FOOTER ── */
 footer   { background: var(--cream-lt); padding: 28px 28px; border-top: 1px solid rgba(139,94,60,.12); }
 .ft-left  { }
@@ -735,6 +774,31 @@ footer   { background: var(--cream-lt); padding: 28px 28px; border-top: 1px soli
 
 </div>
 
+<!-- ── CAL MODAL ── -->
+<div class="cal-modal-bg" id="calModalBg" onclick="closeCalModal(event)">
+  <div class="cal-modal">
+    <div class="cal-modal-title">📅 加入行事曆</div>
+    <div class="cal-modal-sub">2027 / 5 / 30（日）12:00 婚宴午宴</div>
+    <div class="cal-choices">
+      <a class="cal-choice" id="gcalLink" href="#" target="_blank" rel="noopener" onclick="closeCalModalDirect()">
+        <div class="cal-choice-icon">🗓️</div>
+        <div class="cal-choice-info">
+          <div class="cal-choice-name">Google 日曆</div>
+          <div class="cal-choice-desc">Android、Gmail 用戶推薦・LINE 也適用</div>
+        </div>
+      </a>
+      <a class="cal-choice" id="icsLink" href="#" onclick="downloadICSFile(); closeCalModalDirect(); return false;">
+        <div class="cal-choice-icon">📁</div>
+        <div class="cal-choice-info">
+          <div class="cal-choice-name">下載 .ics 檔</div>
+          <div class="cal-choice-desc">iPhone Apple 日曆 / Outlook 適用</div>
+        </div>
+      </a>
+    </div>
+    <button class="cal-cancel" onclick="closeCalModalDirect()">取消</button>
+  </div>
+</div>
+
 <!-- ── USAGI MASCOT ── -->
 <div class="usagi-float">
   <div class="usagi-inner" title="烏薩奇"
@@ -970,7 +1034,27 @@ document.addEventListener('click', closeUsagiBubble);
 document.addEventListener('touchend', closeUsagiBubble, { passive: true });
 
 // ── 加入行事曆 ──
+const GCAL_URL = 'https://calendar.google.com/calendar/render?action=TEMPLATE' +
+  '&text=Juju+%26+Frank+%E5%A9%9A%E5%AE%B4' +
+  '&dates=20270530T040000Z%2F20270530T070000Z' +
+  '&details=%E6%95%AC%E9%82%80%E5%8F%83%E5%8A%A0+Juju+%26+Frank+%E7%9A%84%E5%A9%9A%E7%A6%AE%E5%8D%88%E5%AE%B4%0A%E5%BD%AD%E5%9C%92%E6%96%B0%E6%9D%BF%E9%A4%A8+1F+A+%E5%BB%B3' +
+  '&location=%E6%96%B0%E5%8C%97%E5%B8%82%E6%9D%BF%E6%A9%8B%E5%8D%80%E4%B8%AD%E5%B1%B1%E8%B7%AF%E4%B8%80%E6%AE%B5161%E8%99%9F';
+
 function downloadICS() {
+  document.getElementById('gcalLink').href = GCAL_URL;
+  document.getElementById('calModalBg').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeCalModal(e) {
+  if (e.target === document.getElementById('calModalBg')) closeCalModalDirect();
+}
+function closeCalModalDirect() {
+  document.getElementById('calModalBg').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function downloadICSFile() {
   const ics = [
     'BEGIN:VCALENDAR',
     'VERSION:2.0',
@@ -978,8 +1062,8 @@ function downloadICS() {
     'CALSCALE:GREGORIAN',
     'METHOD:PUBLISH',
     'BEGIN:VEVENT',
-    'DTSTART:20270530T120000',
-    'DTEND:20270530T150000',
+    'DTSTART;TZID=Asia/Taipei:20270530T120000',
+    'DTEND;TZID=Asia/Taipei:20270530T150000',
     'SUMMARY:Juju & Frank 婚宴',
     'DESCRIPTION:敬邀參加 Juju & Frank 的婚禮午宴\n彭園新板館 1F A 廳',
     'LOCATION:彭園新板館 1F A 廳，新北市板橋區中山路一段 161 號',
@@ -987,12 +1071,10 @@ function downloadICS() {
     'END:VEVENT',
     'END:VCALENDAR'
   ].join('\r\n');
-
   const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' });
   const url  = URL.createObjectURL(blob);
   const a    = document.createElement('a');
-  a.href     = url;
-  a.download = 'JujuFrank_Wedding.ics';
+  a.href = url; a.download = 'JujuFrank_Wedding.ics';
   a.click();
   URL.revokeObjectURL(url);
 }
