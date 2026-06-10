@@ -140,6 +140,20 @@ body.intro-lock { overflow: hidden; }
 .car-next    { right: 12px; }
 .photo-credit { font-size: 11px; color: #C0B0A0; text-align: center; margin-top: 10px; letter-spacing: 1px; }
 
+/* ── VOTE ── */
+.car-vote-btn {
+  position: absolute; bottom: 14px; left: 14px; z-index: 2;
+  display: flex; align-items: center; gap: 5px;
+  background: rgba(0,0,0,.22); backdrop-filter: blur(4px);
+  border: 1.5px solid rgba(255,255,255,.35); color: #fff;
+  padding: 6px 13px; border-radius: 20px; cursor: pointer;
+  font-size: 14px; font-family: 'Noto Sans TC', sans-serif;
+  transition: background .25s, border-color .25s;
+}
+.car-vote-btn.voted { background: rgba(210,40,70,.6); border-color: rgba(255,130,150,.7); }
+.car-vote-heart { font-size: 17px; display: inline-block; transition: transform .22s; line-height: 1; }
+.car-vote-count { font-size: 13px; font-weight: 700; min-width: 14px; text-align: left; }
+
 /* ── SCHEDULE ── */
 #schedule    { background: var(--cream-lt); padding: 72px 24px; border-top: 1px solid rgba(139,94,60,.1); }
 #schedule .in { max-width: 440px; margin: 0 auto; }
@@ -184,55 +198,6 @@ body.intro-lock { overflow: hidden; }
 .rsvp-meta   { font-size: 12px; color: #D0C0B0; margin-bottom: 24px; }
 .rsvp-btn    { background: var(--br-light); color: #fff; border: none; padding: 13px 52px; border-radius: 10px; font-size: 16px; font-family: 'Noto Sans TC', sans-serif; font-weight: 700; cursor: pointer; letter-spacing: 3px; transition: background .2s, transform .15s; }
 .rsvp-btn:hover { background: var(--br); transform: scale(1.02); }
-
-/* ── CALENDAR BTN ── */
-.cal-btn {
-  display: inline-flex; align-items: center; gap: 7px;
-  background: transparent; border: 1.5px solid rgba(139,94,60,.35);
-  color: var(--txt-mid); padding: 10px 22px; border-radius: 24px;
-  font-size: 13px; font-family: 'Noto Sans TC', sans-serif;
-  cursor: pointer; letter-spacing: 2px; transition: all .2s;
-}
-.cal-btn:hover { background: var(--br-light); color: #fff; border-color: var(--br-light); }
-
-/* ── CAL MODAL ── */
-.cal-modal-bg {
-  display: none; position: fixed; inset: 0; z-index: 4000;
-  background: rgba(35,20,10,.45); backdrop-filter: blur(3px);
-  align-items: flex-end; justify-content: center;
-}
-.cal-modal-bg.open { display: flex; }
-.cal-modal {
-  background: #fff; border-radius: 20px 20px 0 0;
-  padding: 28px 24px 36px; width: 100%; max-width: 480px;
-  animation: slideUp .28s cubic-bezier(.4,0,.2,1);
-}
-@keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
-.cal-modal-title {
-  font-size: 15px; font-weight: 700; color: var(--txt);
-  text-align: center; margin-bottom: 6px; letter-spacing: 1px;
-}
-.cal-modal-sub {
-  font-size: 12px; color: #C0B0A0; text-align: center;
-  margin-bottom: 22px; letter-spacing: 1px;
-}
-.cal-choices { display: flex; flex-direction: column; gap: 10px; }
-.cal-choice {
-  display: flex; align-items: center; gap: 14px;
-  border: 1.5px solid #E5DDD5; border-radius: 12px; padding: 14px 18px;
-  cursor: pointer; background: #fff; transition: border-color .2s, background .2s;
-  text-decoration: none;
-}
-.cal-choice:hover, .cal-choice:active { border-color: var(--br-mid); background: #FDF6EE; }
-.cal-choice-icon { font-size: 24px; flex-shrink: 0; }
-.cal-choice-info { display: flex; flex-direction: column; }
-.cal-choice-name { font-size: 14px; font-weight: 700; color: var(--txt); }
-.cal-choice-desc { font-size: 11px; color: #B0A090; margin-top: 2px; }
-.cal-cancel {
-  margin-top: 14px; width: 100%; background: none; border: none;
-  font-size: 14px; color: #C0B0A0; font-family: 'Noto Sans TC', sans-serif;
-  cursor: pointer; padding: 8px; letter-spacing: 2px;
-}
 
 /* ── FOOTER ── */
 footer   { background: var(--cream-lt); padding: 28px 28px; border-top: 1px solid rgba(139,94,60,.12); }
@@ -571,6 +536,10 @@ footer   { background: var(--cream-lt); padding: 28px 28px; border-top: 1px soli
       <div class="car-dots" id="carDots"></div>
       <button class="car-btn car-prev" onclick="carMove(-1)">&#8249;</button>
       <button class="car-btn car-next" onclick="carMove(1)">&#8250;</button>
+      <button class="car-vote-btn" id="voteBtn" onclick="voteCurrentPhoto()" title="幫這張婚紗照投票">
+        <span class="car-vote-heart" id="voteHeart">♥</span>
+        <span class="car-vote-count" id="voteCount">…</span>
+      </button>
     </div>
     <div class="photo-credit rv d3">photo by GoodLuck image</div>
   </div>
@@ -589,9 +558,6 @@ footer   { background: var(--cream-lt); padding: 28px 28px; border-top: 1px soli
       <div class="sched-time">12:00</div>
       <div class="sched-dot"></div>
       <div class="sched-desc">🎊 婚宴開始</div>
-    </div>
-    <div style="margin-top:28px" class="rv d3">
-      <button onclick="downloadICS()" class="cal-btn">📅 加入行事曆</button>
     </div>
     <div class="pal-head rv d4">建議著裝色系：大地色</div>
     <div class="pal-row rv d5">
@@ -658,7 +624,6 @@ footer   { background: var(--cream-lt); padding: 28px 28px; border-top: 1px soli
   <div class="ft-cta">
     <span>Juju &amp; Frank 彭園新板結婚典禮</span>
     <span>｜ 是否參加？ <a onclick="openTF()">立即填寫問卷</a></span>
-    <span>｜ <a onclick="downloadICS()">📅 加入行事曆</a></span>
   </div>
 </footer>
 
@@ -774,31 +739,6 @@ footer   { background: var(--cream-lt); padding: 28px 28px; border-top: 1px soli
 
 </div>
 
-<!-- ── CAL MODAL ── -->
-<div class="cal-modal-bg" id="calModalBg" onclick="closeCalModal(event)">
-  <div class="cal-modal">
-    <div class="cal-modal-title">📅 加入行事曆</div>
-    <div class="cal-modal-sub">2027 / 5 / 30（日）12:00 婚宴午宴</div>
-    <div class="cal-choices">
-      <a class="cal-choice" id="gcalLink" href="#" target="_blank" rel="noopener" onclick="closeCalModalDirect()">
-        <div class="cal-choice-icon">🗓️</div>
-        <div class="cal-choice-info">
-          <div class="cal-choice-name">Google 日曆</div>
-          <div class="cal-choice-desc">Android、Gmail 用戶推薦・LINE 也適用</div>
-        </div>
-      </a>
-      <a class="cal-choice" id="icsLink" href="#" onclick="downloadICSFile(); closeCalModalDirect(); return false;">
-        <div class="cal-choice-icon">📁</div>
-        <div class="cal-choice-info">
-          <div class="cal-choice-name">下載 .ics 檔</div>
-          <div class="cal-choice-desc">iPhone Apple 日曆 / Outlook 適用</div>
-        </div>
-      </a>
-    </div>
-    <button class="cal-cancel" onclick="closeCalModalDirect()">取消</button>
-  </div>
-</div>
-
 <!-- ── USAGI MASCOT ── -->
 <div class="usagi-float">
   <div class="usagi-inner" title="烏薩奇"
@@ -873,7 +813,10 @@ document.querySelectorAll('.rv, .rv-l, .rv-r, .rv-sc').forEach(el => obs.observe
     idx = ((n % slides.length) + slides.length) % slides.length;
     track.style.transform = `translateX(-${idx * 100}%)`;
     dotsEl.querySelectorAll('.car-dot').forEach((d, i) => d.classList.toggle('on', i === idx));
+    window.carIdx = idx;
+    if (typeof updateVoteUI === 'function') updateVoteUI();
   };
+  window.carIdx = 0;
   window.carMove = function(dir) { carGo(idx + dir); };
 
   // Touch swipe
@@ -1033,51 +976,54 @@ function closeUsagiBubble(e) {
 document.addEventListener('click', closeUsagiBubble);
 document.addEventListener('touchend', closeUsagiBubble, { passive: true });
 
-// ── 加入行事曆 ──
-const GCAL_URL = 'https://calendar.google.com/calendar/render?action=TEMPLATE' +
-  '&text=Juju+%26+Frank+%E5%A9%9A%E5%AE%B4' +
-  '&dates=20270530T040000Z%2F20270530T070000Z' +
-  '&details=%E6%95%AC%E9%82%80%E5%8F%83%E5%8A%A0+Juju+%26+Frank+%E7%9A%84%E5%A9%9A%E7%A6%AE%E5%8D%88%E5%AE%B4%0A%E5%BD%AD%E5%9C%92%E6%96%B0%E6%9D%BF%E9%A4%A8+1F+A+%E5%BB%B3' +
-  '&location=%E6%96%B0%E5%8C%97%E5%B8%82%E6%9D%BF%E6%A9%8B%E5%8D%80%E4%B8%AD%E5%B1%B1%E8%B7%AF%E4%B8%80%E6%AE%B5161%E8%99%9F';
+// ── 婚紗照投票 ──
+const voteData = {};
 
-function downloadICS() {
-  document.getElementById('gcalLink').href = GCAL_URL;
-  document.getElementById('calModalBg').classList.add('open');
-  document.body.style.overflow = 'hidden';
-}
-
-function closeCalModal(e) {
-  if (e.target === document.getElementById('calModalBg')) closeCalModalDirect();
-}
-function closeCalModalDirect() {
-  document.getElementById('calModalBg').classList.remove('open');
-  document.body.style.overflow = '';
+function loadVotes() {
+  const cb = 'cbvotes_' + Date.now();
+  window[cb] = function(data) {
+    delete window[cb];
+    if (data && data.votes) Object.assign(voteData, data.votes);
+    updateVoteUI();
+  };
+  const s = document.createElement('script');
+  s.src = SCRIPT_URL + '?action=getvotes&callback=' + cb;
+  s.onerror = function() { updateVoteUI(); };
+  document.body.appendChild(s);
 }
 
-function downloadICSFile() {
-  const ics = [
-    'BEGIN:VCALENDAR',
-    'VERSION:2.0',
-    'PRODID:-//Juju & Frank Wedding//TW',
-    'CALSCALE:GREGORIAN',
-    'METHOD:PUBLISH',
-    'BEGIN:VEVENT',
-    'DTSTART;TZID=Asia/Taipei:20270530T120000',
-    'DTEND;TZID=Asia/Taipei:20270530T150000',
-    'SUMMARY:Juju & Frank 婚宴',
-    'DESCRIPTION:敬邀參加 Juju & Frank 的婚禮午宴\n彭園新板館 1F A 廳',
-    'LOCATION:彭園新板館 1F A 廳，新北市板橋區中山路一段 161 號',
-    'STATUS:CONFIRMED',
-    'END:VEVENT',
-    'END:VCALENDAR'
-  ].join('\r\n');
-  const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' });
-  const url  = URL.createObjectURL(blob);
-  const a    = document.createElement('a');
-  a.href = url; a.download = 'JujuFrank_Wedding.ics';
-  a.click();
-  URL.revokeObjectURL(url);
+function updateVoteUI() {
+  const btn  = document.getElementById('voteBtn');
+  const cnt  = document.getElementById('voteCount');
+  if (!btn) return;
+  const i = window.carIdx || 0;
+  cnt.textContent = voteData[i] !== undefined ? voteData[i] : '0';
+  btn.classList.toggle('voted', !!localStorage.getItem('voted_' + i));
 }
+
+function voteCurrentPhoto() {
+  const i   = window.carIdx || 0;
+  const key = 'voted_' + i;
+  if (localStorage.getItem(key)) return;
+  localStorage.setItem(key, '1');
+  voteData[i] = (voteData[i] || 0) + 1;
+  updateVoteUI();
+  // 愛心彈跳動畫
+  const h = document.getElementById('voteHeart');
+  if (h) { h.style.transform = 'scale(1.6)'; setTimeout(() => h.style.transform = '', 280); }
+  // 决 GAS
+  const cb = 'cbvote_' + Date.now();
+  window[cb] = function(data) {
+    delete window[cb];
+    if (data && typeof data.count === 'number') { voteData[i] = data.count; updateVoteUI(); }
+  };
+  const s = document.createElement('script');
+  s.src = SCRIPT_URL + '?action=vote&photo=' + i + '&callback=' + cb;
+  s.onerror = function() {};
+  document.body.appendChild(s);
+}
+
+loadVotes();
 </script>
 </body>
 </html>
