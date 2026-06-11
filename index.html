@@ -6,6 +6,7 @@
 <title>Juju &amp; Frank 婚禮喜帖</title>
 <!-- ★ 新版設計：全頁分區 + 捲動進場動畫 + Typeform 逐步問卷 ★ -->
 <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Noto+Sans+TC:wght@300;400;700&family=Noto+Serif+TC:wght@300;400&display=swap" rel="stylesheet">
+<link rel="preload" as="image" href="img/537-6胖胖.webp">
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -958,9 +959,15 @@ function scrollToRSVP() {
   document.getElementById('rsvp').scrollIntoView({ behavior: 'smooth' });
 }
 
+let _usagiLastTouch = 0;
 function toggleUsagiBubble(e, el) {
   e.stopPropagation();
   e.preventDefault();
+  if (e.type === 'touchend') {
+    _usagiLastTouch = Date.now();
+  } else if (Date.now() - _usagiLastTouch < 500) {
+    return; // touchend 已處理，忽略隨後觸發的 click
+  }
   el.classList.toggle('show');
   const img = document.getElementById('usagiImg');
   img.src = el.classList.contains('show') ? 'img/537-6胖胖.webp' : 'img/537-1.webp';
