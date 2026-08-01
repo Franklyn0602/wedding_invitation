@@ -245,6 +245,16 @@ footer   { background: var(--cream-lt); padding: 28px 28px; border-top: 1px soli
 .tf-num.sel   { background: var(--br-light); color: #fff; border-color: var(--br-light); }
 .tf-ok   { background: var(--br-light); color: #fff; border: none; padding: 11px 26px; border-radius: 8px; font-size: 14px; font-family: 'Noto Sans TC', sans-serif; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; transition: background .2s; }
 .tf-ok:hover { background: var(--br); }
+.tf-file-label { display: block; margin-top: 4px; margin-bottom: 24px; padding: 28px 20px; border: 2px dashed var(--br-light); border-radius: 12px; text-align: center; cursor: pointer; transition: border-color .2s, background .2s; background: rgba(196,137,90,.04); }
+.tf-file-label:hover { border-color: var(--br-mid); background: rgba(196,137,90,.1); }
+.tf-file-label input[type="file"] { display: none; }
+.tf-file-label-icon { font-size: 28px; margin-bottom: 8px; }
+.tf-file-label-txt { font-size: 14px; color: var(--txt-mid); }
+.tf-file-preview { margin-top: 12px; margin-bottom: 20px; text-align: center; }
+.tf-file-preview img { max-width: 100%; max-height: 200px; border-radius: 10px; object-fit: contain; box-shadow: 0 2px 12px rgba(0,0,0,.1); }
+.tf-file-preview-info { margin-top: 8px; font-size: 12px; color: var(--txt-mid); display: flex; align-items: center; justify-content: center; gap: 6px; }
+.tf-file-clear { background: none; border: none; color: #C0B0A0; cursor: pointer; font-size: 12px; padding: 2px 6px; border-radius: 4px; }
+.tf-file-clear:hover { color: var(--accent); }
 .tf-foot { background: #fff; border-top: 1px solid #EEE; padding: 14px 28px; display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; }
 .tf-navs { display: flex; gap: 8px; }
 .tf-nav  { width: 36px; height: 36px; border: 1.5px solid #E5DDD5; border-radius: 50%; background: #fff; cursor: pointer; font-size: 14px; display: flex; align-items: center; justify-content: center; color: var(--txt-mid); transition: border-color .2s; }
@@ -647,7 +657,7 @@ footer   { background: var(--cream-lt); padding: 28px 28px; border-top: 1px soli
   <div class="tf-body">
     <!-- Q1 姓名 -->
     <div class="tf-step on" id="s1">
-      <div class="tf-q-num">1 / 6</div>
+      <div class="tf-q-num">1 / 7</div>
       <div class="tf-q-text">您的中文大名 *</div>
       <input class="tf-input" id="fName" type="text" placeholder="Type your answer here..">
       <button class="tf-ok" onclick="goNext(2)">OK ✓</button>
@@ -655,7 +665,7 @@ footer   { background: var(--cream-lt); padding: 28px 28px; border-top: 1px soli
 
     <!-- Q2 電話 -->
     <div class="tf-step" id="s2">
-      <div class="tf-q-num">2 / 6</div>
+      <div class="tf-q-num">2 / 7</div>
       <div class="tf-q-text">您的聯絡電話 *</div>
       <input class="tf-input" id="fPhone" type="tel" placeholder="請輸入手機號碼">
       <button class="tf-ok" onclick="goNext(3)">OK ✓</button>
@@ -663,7 +673,7 @@ footer   { background: var(--cream-lt); padding: 28px 28px; border-top: 1px soli
 
     <!-- Q3 出席 -->
     <div class="tf-step" id="s3">
-      <div class="tf-q-num">3 / 6</div>
+      <div class="tf-q-num">3 / 7</div>
       <div class="tf-q-text">請問 2027/5/30 午宴是否方便出席？ *</div>
       <div class="tf-q-hint">無法前來的朋友請不要有壓力，我們會感受到你們祝福的：）</div>
       <div class="tf-opts">
@@ -678,7 +688,7 @@ footer   { background: var(--cream-lt); padding: 28px 28px; border-top: 1px soli
 
     <!-- Q4 哪方 -->
     <div class="tf-step" id="s4">
-      <div class="tf-q-num">4 / 6</div>
+      <div class="tf-q-num">4 / 7</div>
       <div class="tf-q-text">您是哪方的家人/朋友？ *</div>
       <div class="tf-opts">
         <div class="tf-opt" onclick="pick(this,'side','男方家人');goNext(5)">
@@ -704,7 +714,7 @@ footer   { background: var(--cream-lt); padding: 28px 28px; border-top: 1px soli
 
     <!-- Q5 人數 -->
     <div class="tf-step" id="s5">
-      <div class="tf-q-num">5 / 6</div>
+      <div class="tf-q-num">5 / 7</div>
       <div class="tf-q-text">請問共有幾位成員一同參加？ *</div>
       <div class="tf-q-hint">人數請包含自己，若有小孩也請算在內喔。</div>
       <div class="tf-num-grid">
@@ -724,13 +734,34 @@ footer   { background: var(--cream-lt); padding: 28px 28px; border-top: 1px soli
 
     <!-- Q6 吃素人數 -->
     <div class="tf-step" id="s6">
-      <div class="tf-q-num">6 / 6</div>
+      <div class="tf-q-num">6 / 7</div>
       <div class="tf-q-text">共幾位吃素：</div>
       <div class="tf-q-hint">請一併考量同行親友，如沒有可跳過此題。</div>
       <input type="number" id="fVeg" class="tf-input" placeholder="請填入數字" min="0" style="max-width:200px">
       <br>
-      <button class="tf-ok" onclick="ans.remark=document.getElementById('fVeg').value||'0';submitForm()">OK ✓</button>
-      <button class="tf-ok" onclick="ans.remark='0';submitForm()" style="margin-left:10px;background:#C0B0A0">跳過</button>
+      <button class="tf-ok" onclick="ans.remark=document.getElementById('fVeg').value||'0';goNext(7)">OK ✓</button>
+      <button class="tf-ok" onclick="ans.remark='0';goNext(7)" style="margin-left:10px;background:#C0B0A0">跳過</button>
+    </div>
+
+    <!-- Q7 上傳照片（選填） -->
+    <div class="tf-step" id="s7">
+      <div class="tf-q-num">7 / 7</div>
+      <div class="tf-q-text">上傳一張您與我們的照片 ♡</div>
+      <div class="tf-q-hint">選填 — 可以是合照或任何您想與我們分享的畫面，大小限 5MB 以內。</div>
+      <label class="tf-file-label" id="fPhotoLabel">
+        <input type="file" id="fPhoto" accept="image/*" onchange="handlePhotoChange(this)">
+        <div class="tf-file-label-icon">📷</div>
+        <div class="tf-file-label-txt" id="fPhotoLabelTxt">點擊選擇照片</div>
+      </label>
+      <div class="tf-file-preview" id="fPhotoPreview" style="display:none">
+        <img id="fPhotoImg" src="" alt="預覽">
+        <div class="tf-file-preview-info">
+          <span id="fPhotoName"></span>
+          <button class="tf-file-clear" onclick="clearPhoto()">✕ 移除</button>
+        </div>
+      </div>
+      <button class="tf-ok" onclick="submitForm()">送出 ✓</button>
+      <button class="tf-ok" onclick="submitForm()" style="margin-left:10px;background:#C0B0A0">不上傳直接送出</button>
     </div>
 
     <!-- 完成 -->
@@ -846,7 +877,7 @@ document.querySelectorAll('.rv, .rv-l, .rv-r, .rv-sc').forEach(el => obs.observe
 
 // ── TYPEFORM 邏輯 ──
 const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbygDHk9DStPmwJaklv4GM8jffvJVSsIdzjM2ydQZGKk4n_v-OgZgFpXFZboS2HREDmukw/exec';
-const TOTAL = 6;
+const TOTAL = 7;
 let cur = 1;
 const ans = { name: '', phone: '', attend: '', side: '', count: 0, remark: '' };
 
@@ -948,23 +979,47 @@ function submitForm() {
   if (ans.attend !== '可惜無法出席' && !ans.count) { alert('請選擇人數'); return; }
   ans.name = document.getElementById('fName').value.trim();
   const isResubmit = localStorage.getItem('rsvp_resubmit') === '1';
-  const cbName = 'cb_' + Date.now();
-  const params = new URLSearchParams({ callback: cbName, name: ans.name, phone: ans.phone, attend: ans.attend, count: ans.count, note: ans.side, remark: ans.remark, resubmit: isResubmit ? '是' : '' });
-  window[cbName] = function() { delete window[cbName]; };
-  const s = document.createElement('script');
-  s.src = SCRIPT_URL + '?' + params.toString();
-  s.onerror = () => {};
-  document.body.appendChild(s);
-  localStorage.setItem('rsvp_submitted', ans.attend);
-  localStorage.removeItem('rsvp_resubmit');
-  showStep('done');
-  document.getElementById('doneAlreadyText').style.display = 'none';
-  document.getElementById('doneResubmitBtn').style.display = 'block';
-  // 清除填寫內容
-  document.getElementById('fName').value = '';
-  document.querySelectorAll('.tf-opt.sel').forEach(o => o.classList.remove('sel'));
-  document.querySelectorAll('.tf-num.sel').forEach(b => b.classList.remove('sel'));
-  Object.assign(ans, { name: '', phone: '', attend: '', side: '', count: 0, remark: '' });
+  const photoInput = document.getElementById('fPhoto');
+  const photo = photoInput && photoInput.files[0] ? photoInput.files[0] : null;
+
+  function doCleanup() {
+    localStorage.setItem('rsvp_submitted', ans.attend);
+    localStorage.removeItem('rsvp_resubmit');
+    showStep('done');
+    document.getElementById('doneAlreadyText').style.display = 'none';
+    document.getElementById('doneResubmitBtn').style.display = 'block';
+    document.getElementById('fName').value = '';
+    const vegEl = document.getElementById('fVeg'); if (vegEl) vegEl.value = '';
+    clearPhoto();
+    document.querySelectorAll('.tf-opt.sel').forEach(o => o.classList.remove('sel'));
+    document.querySelectorAll('.tf-num.sel').forEach(b => b.classList.remove('sel'));
+    Object.assign(ans, { name: '', phone: '', attend: '', side: '', count: 0, remark: '' });
+  }
+
+  if (photo) {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      const base64 = e.target.result.split(',')[1];
+      const payload = JSON.stringify({
+        name: ans.name, phone: ans.phone, attend: ans.attend,
+        count: ans.count, note: ans.side, remark: ans.remark,
+        photoBase64: base64, photoName: photo.name, photoType: photo.type,
+        resubmit: isResubmit ? '是' : ''
+      });
+      fetch(SCRIPT_URL, { method: 'POST', body: payload }).catch(() => {});
+      doCleanup();
+    };
+    reader.readAsDataURL(photo);
+  } else {
+    const cbName = 'cb_' + Date.now();
+    const params = new URLSearchParams({ callback: cbName, name: ans.name, phone: ans.phone, attend: ans.attend, count: ans.count, note: ans.side, remark: ans.remark, resubmit: isResubmit ? '是' : '' });
+    window[cbName] = function() { delete window[cbName]; };
+    const s = document.createElement('script');
+    s.src = SCRIPT_URL + '?' + params.toString();
+    s.onerror = () => {};
+    document.body.appendChild(s);
+    doCleanup();
+  }
 }
 
 function resubmitForm() {
@@ -973,7 +1028,35 @@ function resubmitForm() {
   document.getElementById('doneAlreadyText').style.display = 'none';
   document.getElementById('doneResubmitBtn').style.display = 'none';
   Object.assign(ans, { name: '', phone: '', attend: '', side: '', count: 0, remark: '' });
+  clearPhoto();
   showStep(1);
+}
+
+function handlePhotoChange(input) {
+  const file = input.files[0];
+  if (!file) return;
+  if (file.size > 5 * 1024 * 1024) {
+    alert('檔案大小不能超過 5MB，請選擇較小的圖片。');
+    input.value = '';
+    return;
+  }
+  document.getElementById('fPhotoLabelTxt').textContent = '已選擇：' + file.name;
+  document.getElementById('fPhotoName').textContent = file.name;
+  const reader = new FileReader();
+  reader.onload = e => {
+    document.getElementById('fPhotoImg').src = e.target.result;
+    document.getElementById('fPhotoPreview').style.display = 'block';
+  };
+  reader.readAsDataURL(file);
+}
+
+function clearPhoto() {
+  const input = document.getElementById('fPhoto');
+  if (input) input.value = '';
+  const lblTxt = document.getElementById('fPhotoLabelTxt');
+  if (lblTxt) lblTxt.textContent = '點擊選擇照片';
+  const preview = document.getElementById('fPhotoPreview');
+  if (preview) preview.style.display = 'none';
 }
 
 function scrollToRSVP() {
