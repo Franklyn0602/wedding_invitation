@@ -257,6 +257,9 @@ footer   { background: var(--cream-lt); padding: 28px 28px; border-top: 1px soli
 .tf-q-num  { font-size: 12px; color: var(--txt-soft); margin-bottom: 14px; letter-spacing: 1px; }
 .tf-q-text { font-size: 19px; font-weight: 500; letter-spacing: .03em; color: var(--txt); margin-bottom: 8px; line-height: 1.5; }
 .tf-q-hint { font-size: 12px; color: var(--txt-mid); margin-bottom: 28px; line-height: 1.75; }
+.tf-field  { margin-bottom: 20px; }
+.tf-field .tf-input { margin-bottom: 0; }
+.tf-label  { display: block; font-size: 13px; color: var(--txt-mid); letter-spacing: .05em; margin-bottom: 2px; }
 .tf-input  { width: 100%; border: none; border-bottom: 2px solid var(--br-light); background: transparent; font-size: 17px; font-family: 'Noto Sans TC', sans-serif; color: var(--txt); padding: 10px 0; outline: none; margin-bottom: 28px; }
 .tf-input::placeholder { color: var(--placeholder); }
 .tf-input:focus { border-color: var(--br); }
@@ -799,11 +802,23 @@ footer   { background: var(--cream-lt); padding: 28px 28px; border-top: 1px soli
       <button class="tf-ok ghost" onclick="ans.remark='0';goNext(8)" style="margin-left:10px">跳過</button>
     </div>
 
-    <!-- Q8 上傳照片（選填） -->
+    <!-- Q8 單身書籍（全部選填） -->
     <div class="tf-step" id="s8">
       <div class="tf-q-num">8 / 8</div>
-      <div class="tf-q-text">上傳一張您與我們的照片 ♡</div>
-      <div class="tf-q-hint">選填 — 可以是合照或任何您想與我們分享的畫面，大小限 5MB 以內。</div>
+      <div class="tf-q-text">現在脫單了嗎？</div>
+      <div class="tf-q-hint">我們將於婚禮擺放單身書籍，提供交流機會，僅此一次敬請把握！<br>為了方便製作，請提供以下資訊：</div>
+
+      <div class="tf-field">
+        <label class="tf-label" for="fNick">姓名／小名</label>
+        <input class="tf-input" id="fNick" type="text" placeholder="選填">
+      </div>
+
+      <div class="tf-field">
+        <label class="tf-label" for="fIG">IG 帳號</label>
+        <input class="tf-input" id="fIG" type="text" placeholder="選填，例：juju.wedding">
+      </div>
+
+      <label class="tf-label">照片 <span style="color:var(--txt-soft);letter-spacing:0">（大小限 5MB 以內）</span></label>
       <label class="tf-file-label" id="fPhotoLabel">
         <input type="file" id="fPhoto" accept="image/*" onchange="handlePhotoChange(this)">
         <div class="tf-file-label-icon">📷</div>
@@ -817,7 +832,7 @@ footer   { background: var(--cream-lt); padding: 28px 28px; border-top: 1px soli
         </div>
       </div>
       <button class="tf-ok" onclick="submitForm()">送出 ✓</button>
-      <button class="tf-ok ghost" onclick="submitForm()" style="margin-left:10px">不上傳直接送出</button>
+      <button class="tf-ok ghost" onclick="submitForm()" style="margin-left:10px">略過此題送出</button>
     </div>
 
     <!-- 完成 -->
@@ -935,7 +950,7 @@ document.querySelectorAll('.rv, .rv-l, .rv-r, .rv-sc').forEach(el => obs.observe
 const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbygDHk9DStPmwJaklv4GM8jffvJVSsIdzjM2ydQZGKk4n_v-OgZgFpXFZboS2HREDmukw/exec';
 const TOTAL = 8;
 let cur = 1;
-const ans = { name: '', phone: '', attend: '', side: '', count: 0, baby: 0, remark: '' };
+const ans = { name: '', phone: '', attend: '', side: '', count: 0, baby: 0, remark: '', nick: '', ig: '' };
 
 function openTF() {
   document.getElementById('tfOv').classList.add('open');
@@ -1050,6 +1065,9 @@ function submitForm() {
   if (ans.attend !== '可惜無法出席' && !ans.count) { alert('請選擇人數'); return; }
   if (ans.baby > ans.count) { alert('需要寶寶椅的人數不可超過出席人數喔'); return; }
   ans.name = document.getElementById('fName').value.trim();
+  // 單身書籍（全部選填）
+  const nickEl = document.getElementById('fNick'); ans.nick = nickEl ? nickEl.value.trim() : '';
+  const igEl   = document.getElementById('fIG');   ans.ig   = igEl   ? igEl.value.trim()   : '';
   const isResubmit = localStorage.getItem('rsvp_resubmit') === '1';
   const photoInput = document.getElementById('fPhoto');
   const photo = photoInput && photoInput.files[0] ? photoInput.files[0] : null;
@@ -1062,10 +1080,12 @@ function submitForm() {
     document.getElementById('doneResubmitBtn').style.display = 'block';
     document.getElementById('fName').value = '';
     const vegEl = document.getElementById('fVeg'); if (vegEl) vegEl.value = '';
+    const nickClr = document.getElementById('fNick'); if (nickClr) nickClr.value = '';
+    const igClr   = document.getElementById('fIG');   if (igClr)   igClr.value   = '';
     clearPhoto();
     document.querySelectorAll('.tf-opt.sel').forEach(o => o.classList.remove('sel'));
     document.querySelectorAll('.tf-num.sel').forEach(b => b.classList.remove('sel'));
-    Object.assign(ans, { name: '', phone: '', attend: '', side: '', count: 0, baby: 0, remark: '' });
+    Object.assign(ans, { name: '', phone: '', attend: '', side: '', count: 0, baby: 0, remark: '', nick: '', ig: '' });
   }
 
   if (photo) {
@@ -1075,6 +1095,7 @@ function submitForm() {
       const payload = JSON.stringify({
         name: ans.name, phone: ans.phone, attend: ans.attend,
         count: ans.count, baby: ans.baby, note: ans.side, remark: ans.remark,
+        nick: ans.nick, ig: ans.ig,
         photoBase64: base64, photoName: photo.name, photoType: photo.type,
         resubmit: isResubmit ? '是' : ''
       });
@@ -1084,7 +1105,7 @@ function submitForm() {
     reader.readAsDataURL(photo);
   } else {
     const cbName = 'cb_' + Date.now();
-    const params = new URLSearchParams({ callback: cbName, name: ans.name, phone: ans.phone, attend: ans.attend, count: ans.count, baby: ans.baby, note: ans.side, remark: ans.remark, resubmit: isResubmit ? '是' : '' });
+    const params = new URLSearchParams({ callback: cbName, name: ans.name, phone: ans.phone, attend: ans.attend, count: ans.count, baby: ans.baby, note: ans.side, remark: ans.remark, nick: ans.nick, ig: ans.ig, resubmit: isResubmit ? '是' : '' });
     window[cbName] = function() { delete window[cbName]; };
     const s = document.createElement('script');
     s.src = SCRIPT_URL + '?' + params.toString();
@@ -1099,7 +1120,7 @@ function resubmitForm() {
   localStorage.removeItem('rsvp_submitted');
   document.getElementById('doneAlreadyText').style.display = 'none';
   document.getElementById('doneResubmitBtn').style.display = 'none';
-  Object.assign(ans, { name: '', phone: '', attend: '', side: '', count: 0, baby: 0, remark: '' });
+  Object.assign(ans, { name: '', phone: '', attend: '', side: '', count: 0, baby: 0, remark: '', nick: '', ig: '' });
   clearPhoto();
   showStep(1);
 }
