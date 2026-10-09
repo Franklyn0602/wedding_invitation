@@ -168,11 +168,31 @@ body.intro-lock { overflow: hidden; }
 #schedule    { background: var(--cream-2); padding: 72px 24px; border-top: 1px solid rgba(201,167,124,.3); }
 #schedule .in { max-width: 440px; margin: 0 auto; }
 .sec-title   { font-family: 'Playfair Display', serif; font-size: clamp(23px, 5.2vw, 33px); color: var(--txt); font-weight: 400; letter-spacing: .04em; margin-bottom: 28px; }
-.sched-row   { display: flex; align-items: flex-start; gap: 14px; margin-bottom: 20px; }
-.sched-time  { font-size: 14px; font-weight: 500; color: var(--br-mid); min-width: 48px; padding-top: 3px; }
-.sched-dot   { width: 8px; height: 8px; border-radius: 50%; background: var(--br-light); margin-top: 7px; flex-shrink: 0; }
-.sched-desc  { font-size: 14px; color: var(--txt-mid); line-height: 1.6; }
-.pal-head    { font-size: 12px; color: var(--txt-mid); letter-spacing: 3px; margin: 28px 0 12px; }
+.tl-grid     { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-top: 30px; }
+.tl-item     {
+  position: relative; background: #fff; border: 1px solid var(--oat);
+  border-radius: 16px; padding: 38px 14px 26px; text-align: center;
+  transition: transform .35s ease, box-shadow .35s ease, border-color .35s ease;
+}
+/* hover 時浮起，並浮現內層細框 */
+.tl-item::after {
+  content: ''; position: absolute; inset: 7px; border: 1px solid var(--oat);
+  border-radius: 10px; opacity: 0; transition: opacity .35s ease; pointer-events: none;
+}
+.tl-item:hover { transform: translateY(-4px); border-color: var(--br-light); box-shadow: 0 8px 26px rgba(139,120,100,.14); }
+.tl-item:hover::after { opacity: .7; }
+.tl-badge    {
+  position: absolute; top: -19px; left: 50%; margin-left: -19px;
+  width: 38px; height: 38px; border-radius: 50%;
+  background: var(--cream-2); border: 1px solid var(--oat);
+  display: flex; align-items: center; justify-content: center;
+}
+.tl-badge svg { width: 19px; height: 19px; fill: none; stroke: var(--br); stroke-width: 1.2; stroke-linecap: round; stroke-linejoin: round; }
+.tl-step     { font-family: 'Playfair Display', serif; font-size: 11px; letter-spacing: .36em; color: var(--txt-soft); margin-bottom: 6px; text-indent: .36em; }
+.tl-time     { font-family: 'Playfair Display', serif; font-weight: 400; color: var(--txt); font-size: clamp(25px, 7vw, 30px); letter-spacing: .05em; line-height: 1.15; }
+.tl-line     { width: 20px; height: 1px; background: var(--oat); margin: 13px auto; }
+.tl-title    { font-family: 'Noto Serif TC', serif; font-weight: 400; font-size: 14px; letter-spacing: .1em; color: var(--txt); line-height: 1.7; }
+.pal-head    { font-size: 12px; color: var(--txt-mid); letter-spacing: 3px; margin: 40px 0 12px; }
 .pal-row     { display: flex; gap: 8px; flex-wrap: wrap; }
 .pal-chip    { width: 38px; height: 38px; border-radius: 11px; box-shadow: 0 1px 5px rgba(139,120,100,.14); }
 
@@ -549,7 +569,7 @@ footer   { background: var(--cream-lt); padding: 28px 28px; border-top: 1px soli
 <!-- ── STORY ── -->
 <section id="story">
   <div class="in">
-    <div class="s-title rv">💍 是的，我們結婚了 🏠</div>
+    <div class="s-title rv">💍 是的，我們要結婚囉 🏠</div>
     <div class="s-text rv d1">在這意義重大的日子<br>衷心希望能有您的蒞臨參與 ❤️</div>
     <div class="carousel rv d2" id="photoCarousel">
       <div class="car-track" id="carTrack">
@@ -578,23 +598,25 @@ footer   { background: var(--cream-lt); padding: 28px 28px; border-top: 1px soli
 <section id="schedule">
   <div class="in">
     <div class="sec-title rv">婚禮流程</div>
-    <div class="sched-row rv d1">
-      <div class="sched-time">11:30</div>
-      <div class="sched-dot"></div>
-      <div class="sched-desc">✏️ 婚宴簽到・入席</div>
-    </div>
-    <div class="sched-row rv d2">
-      <div class="sched-time">12:00</div>
-      <div class="sched-dot"></div>
-      <div class="sched-desc">🎊 婚宴開始</div>
-    </div>
-    <div class="pal-head rv d4">建議著裝色系：大地色</div>
-    <div class="pal-row rv d5">
-      <div class="pal-chip" style="background:#9B8C7E"></div>
-      <div class="pal-chip" style="background:#C47A5A"></div>
-      <div class="pal-chip" style="background:#A0402A"></div>
-      <div class="pal-chip" style="background:#C4956A"></div>
-      <div class="pal-chip" style="background:#D4B896"></div>
+    <div class="tl-grid">
+      <div class="tl-item rv d1">
+        <div class="tl-badge">
+          <svg viewBox="0 0 24 24"><path d="M4 19.8h16"/><path d="M14.9 4.5l3.6 3.6-8.7 8.7-4.4.8.8-4.4z"/><path d="M13.3 6.1l3.6 3.6"/></svg>
+        </div>
+        <div class="tl-step">01</div>
+        <div class="tl-time">11:30</div>
+        <div class="tl-line"></div>
+        <div class="tl-title">婚宴簽到・入席</div>
+      </div>
+      <div class="tl-item rv d2">
+        <div class="tl-badge">
+          <svg viewBox="0 0 24 24"><path d="M8.2 3.8h7.6l-1 6.4a2.8 2.8 0 0 1-5.6 0z"/><path d="M12 13v5.9"/><path d="M9.3 19.4h5.4"/><path d="M18 4.6l1.8-1.4"/><path d="M19.2 8.2l2-.4"/></svg>
+        </div>
+        <div class="tl-step">02</div>
+        <div class="tl-time">12:00</div>
+        <div class="tl-line"></div>
+        <div class="tl-title">婚宴開始</div>
+      </div>
     </div>
   </div>
 </section>
