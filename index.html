@@ -240,6 +240,7 @@ footer   { background: var(--cream-lt); padding: 28px 28px; border-top: 1px soli
 .tf-opt-key  { width: 26px; height: 26px; border-radius: 5px; background: var(--br-light); color: #fff; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
 .tf-opt-text { font-size: 14px; color: var(--txt); }
 .tf-num-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-bottom: 28px; }
+.tf-num-grid.six { grid-template-columns: repeat(6, 1fr); }
 .tf-num  { aspect-ratio: 1; border: 1.5px solid #E5DDD5; border-radius: 8px; background: #fff; font-size: 16px; color: var(--txt); cursor: pointer; transition: all .2s; font-family: 'Noto Sans TC', sans-serif; }
 .tf-num:hover { border-color: var(--br-light); }
 .tf-num.sel   { background: var(--br-light); color: #fff; border-color: var(--br-light); }
@@ -620,7 +621,9 @@ footer   { background: var(--cream-lt); padding: 28px 28px; border-top: 1px soli
     <div class="trans-item rv d4">
       <div class="trans-title">🅿️ 停車</div>
       <ul class="trans-list">
-        <li>市民廣場地下停車場・歐特儀（每小時 40 元）<span style="margin-left:6px;background:var(--br-light);color:#fff;font-size:10px;padding:2px 7px;border-radius:10px;vertical-align:middle;letter-spacing:1px">館內特約</span></li>
+        <li>市民廣場地下停車場・歐特儀（每小時 40 元）<span style="margin-left:6px;background:var(--br-light);color:#fff;font-size:10px;padding:2px 7px;border-radius:10px;vertical-align:middle;letter-spacing:1px">館內特約</span>
+          <div style="margin-top:2px;margin-bottom:6px;font-size:12px;line-height:1.8;color:#fff;background:rgba(255,255,255,.1);border-left:2px solid var(--br-light);border-radius:0 6px 6px 0;padding:6px 10px">🎁 婚宴賓客停此停車場可享 <b>3 小時停車優惠</b><br><span style="color:rgba(255,255,255,.65)">請於入席時向現場服務人員索取</span></div>
+        </li>
         <li>板橋火車站地下停車場（每小時 40 元）</li>
         <li>特專三停車場（每小時 30 元）</li>
         <li style="color:rgba(255,255,255,.45)">市府地下室停車場不對外使用</li>
@@ -660,7 +663,7 @@ footer   { background: var(--cream-lt); padding: 28px 28px; border-top: 1px soli
   <div class="tf-body">
     <!-- Q1 姓名 -->
     <div class="tf-step on" id="s1">
-      <div class="tf-q-num">1 / 7</div>
+      <div class="tf-q-num">1 / 8</div>
       <div class="tf-q-text">您的中文大名 *</div>
       <input class="tf-input" id="fName" type="text" placeholder="Type your answer here..">
       <button class="tf-ok" onclick="goNext(2)">OK ✓</button>
@@ -668,19 +671,45 @@ footer   { background: var(--cream-lt); padding: 28px 28px; border-top: 1px soli
 
     <!-- Q2 電話 -->
     <div class="tf-step" id="s2">
-      <div class="tf-q-num">2 / 7</div>
+      <div class="tf-q-num">2 / 8</div>
       <div class="tf-q-text">您的聯絡電話 *</div>
       <input class="tf-input" id="fPhone" type="tel" placeholder="請輸入手機號碼">
       <button class="tf-ok" onclick="goNext(3)">OK ✓</button>
     </div>
 
-    <!-- Q3 出席 -->
+    <!-- Q3 哪方（先問，無法出席也能統計） -->
     <div class="tf-step" id="s3">
-      <div class="tf-q-num">3 / 7</div>
+      <div class="tf-q-num">3 / 8</div>
+      <div class="tf-q-text">您是哪方的家人/朋友？ *</div>
+      <div class="tf-opts">
+        <div class="tf-opt" onclick="pick(this,'side','男方家人');goNext(4)">
+          <div class="tf-opt-key">A</div><div class="tf-opt-text">男方家人</div>
+        </div>
+        <div class="tf-opt" onclick="pick(this,'side','男方朋友');goNext(4)">
+          <div class="tf-opt-key">B</div><div class="tf-opt-text">男方朋友</div>
+        </div>
+        <div class="tf-opt" onclick="pick(this,'side','女方家人');goNext(4)">
+          <div class="tf-opt-key">C</div><div class="tf-opt-text">女方家人</div>
+        </div>
+        <div class="tf-opt" onclick="pick(this,'side','女方朋友');goNext(4)">
+          <div class="tf-opt-key">D</div><div class="tf-opt-text">女方朋友</div>
+        </div>
+        <div class="tf-opt" onclick="pick(this,'side','男方父母親友');goNext(4)">
+          <div class="tf-opt-key">E</div><div class="tf-opt-text">男方父母親友</div>
+        </div>
+        <div class="tf-opt" onclick="pick(this,'side','女方父母親友');goNext(4)">
+          <div class="tf-opt-key">F</div><div class="tf-opt-text">女方父母親友</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Q4 出席 -->
+    <div class="tf-step" id="s4">
+      <div class="tf-q-num">4 / 8</div>
       <div class="tf-q-text">請問 2027/5/30 午宴是否方便出席？ *</div>
       <div class="tf-q-hint">無法前來的朋友請不要有壓力，我們會感受到你們祝福的：）</div>
       <div class="tf-opts">
-        <div class="tf-opt" onclick="pick(this,'attend','肯定出席');goNext(4)">
+        <div class="tf-opt" onclick="pick(this,'attend','肯定出席');goNext(5)">
           <div class="tf-opt-key">A</div><div class="tf-opt-text">肯定出席</div>
         </div>
         <div class="tf-opt" onclick="pick(this,'attend','可惜無法出席');goSkipDone()">
@@ -689,35 +718,9 @@ footer   { background: var(--cream-lt); padding: 28px 28px; border-top: 1px soli
       </div>
     </div>
 
-    <!-- Q4 哪方 -->
-    <div class="tf-step" id="s4">
-      <div class="tf-q-num">4 / 7</div>
-      <div class="tf-q-text">您是哪方的家人/朋友？ *</div>
-      <div class="tf-opts">
-        <div class="tf-opt" onclick="pick(this,'side','男方家人');goNext(5)">
-          <div class="tf-opt-key">A</div><div class="tf-opt-text">男方家人</div>
-        </div>
-        <div class="tf-opt" onclick="pick(this,'side','男方朋友');goNext(5)">
-          <div class="tf-opt-key">B</div><div class="tf-opt-text">男方朋友</div>
-        </div>
-        <div class="tf-opt" onclick="pick(this,'side','女方家人');goNext(5)">
-          <div class="tf-opt-key">C</div><div class="tf-opt-text">女方家人</div>
-        </div>
-        <div class="tf-opt" onclick="pick(this,'side','女方朋友');goNext(5)">
-          <div class="tf-opt-key">D</div><div class="tf-opt-text">女方朋友</div>
-        </div>
-        <div class="tf-opt" onclick="pick(this,'side','男方主婚人朋友');goNext(5)">
-          <div class="tf-opt-key">E</div><div class="tf-opt-text">男方主婚人朋友</div>
-        </div>
-        <div class="tf-opt" onclick="pick(this,'side','女方主婚人朋友');goNext(5)">
-          <div class="tf-opt-key">F</div><div class="tf-opt-text">女方主婚人朋友</div>
-        </div>
-      </div>
-    </div>
-
     <!-- Q5 人數 -->
     <div class="tf-step" id="s5">
-      <div class="tf-q-num">5 / 7</div>
+      <div class="tf-q-num">5 / 8</div>
       <div class="tf-q-text">請問共有幾位成員一同參加？ *</div>
       <div class="tf-q-hint">人數請包含自己，若有小孩也請算在內喔。</div>
       <div class="tf-num-grid">
@@ -735,20 +738,37 @@ footer   { background: var(--cream-lt); padding: 28px 28px; border-top: 1px soli
       <button class="tf-ok" onclick="goNext(6)">OK ✓</button>
     </div>
 
-    <!-- Q6 吃素人數 -->
+    <!-- Q6 兒童椅／寶寶椅 -->
     <div class="tf-step" id="s6">
-      <div class="tf-q-num">6 / 7</div>
+      <div class="tf-q-num">6 / 8</div>
+      <div class="tf-q-text">出席的小朋友中，有幾位需要兒童椅／寶寶椅？</div>
+      <div class="tf-q-hint">方便我們提前為寶貝們安排座位，沒有需求請選 0。</div>
+      <div class="tf-num-grid six" id="babyGrid">
+        <button class="tf-num" onclick="pickBaby(this,0)">0</button>
+        <button class="tf-num" onclick="pickBaby(this,1)">1</button>
+        <button class="tf-num" onclick="pickBaby(this,2)">2</button>
+        <button class="tf-num" onclick="pickBaby(this,3)">3</button>
+        <button class="tf-num" onclick="pickBaby(this,4)">4</button>
+        <button class="tf-num" onclick="pickBaby(this,5)">5</button>
+      </div>
+      <button class="tf-ok" onclick="goNext(7)">OK ✓</button>
+      <button class="tf-ok" onclick="resetBaby();goNext(7)" style="margin-left:10px;background:#C0B0A0">不需要</button>
+    </div>
+
+    <!-- Q7 吃素人數 -->
+    <div class="tf-step" id="s7">
+      <div class="tf-q-num">7 / 8</div>
       <div class="tf-q-text">共幾位吃素：</div>
       <div class="tf-q-hint">請一併考量同行親友，如沒有可跳過此題。</div>
       <input type="number" id="fVeg" class="tf-input" placeholder="請填入數字" min="0" style="max-width:200px">
       <br>
-      <button class="tf-ok" onclick="ans.remark=document.getElementById('fVeg').value||'0';goNext(7)">OK ✓</button>
-      <button class="tf-ok" onclick="ans.remark='0';goNext(7)" style="margin-left:10px;background:#C0B0A0">跳過</button>
+      <button class="tf-ok" onclick="ans.remark=document.getElementById('fVeg').value||'0';goNext(8)">OK ✓</button>
+      <button class="tf-ok" onclick="ans.remark='0';goNext(8)" style="margin-left:10px;background:#C0B0A0">跳過</button>
     </div>
 
-    <!-- Q7 上傳照片（選填） -->
-    <div class="tf-step" id="s7">
-      <div class="tf-q-num">7 / 7</div>
+    <!-- Q8 上傳照片（選填） -->
+    <div class="tf-step" id="s8">
+      <div class="tf-q-num">8 / 8</div>
       <div class="tf-q-text">上傳一張您與我們的照片 ♡</div>
       <div class="tf-q-hint">選填 — 可以是合照或任何您想與我們分享的畫面，大小限 5MB 以內。</div>
       <label class="tf-file-label" id="fPhotoLabel">
@@ -880,9 +900,9 @@ document.querySelectorAll('.rv, .rv-l, .rv-r, .rv-sc').forEach(el => obs.observe
 
 // ── TYPEFORM 邏輯 ──
 const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbygDHk9DStPmwJaklv4GM8jffvJVSsIdzjM2ydQZGKk4n_v-OgZgFpXFZboS2HREDmukw/exec';
-const TOTAL = 7;
+const TOTAL = 8;
 let cur = 1;
-const ans = { name: '', phone: '', attend: '', side: '', count: 0, remark: '' };
+const ans = { name: '', phone: '', attend: '', side: '', count: 0, baby: 0, remark: '' };
 
 function openTF() {
   document.getElementById('tfOv').classList.add('open');
@@ -951,10 +971,10 @@ function nextStep() {
     const phone = document.getElementById('fPhone').value.trim();
     if (!phone) { document.getElementById('fPhone').focus(); return; }
   }
-  if (cur === 3 && !ans.attend) return;
-  if (cur === 4 && !ans.side)   return;
+  if (cur === 3 && !ans.side)   return;
+  if (cur === 4 && !ans.attend) return;
   if (cur === 5 && !ans.count)  return;
-  // Q6 為選填，不驗證
+  // Q6（寶寶椅）、Q7（吃素）、Q8（照片）皆為選填，不驗證
   if (cur < TOTAL) goNext(cur + 1);
   else if (cur === TOTAL) submitForm();
 }
@@ -966,20 +986,36 @@ function pick(el, key, val) {
 }
 
 function pickNum(el, n) {
-  document.querySelectorAll('.tf-num').forEach(b => b.classList.remove('sel'));
+  el.parentNode.querySelectorAll('.tf-num').forEach(b => b.classList.remove('sel'));
   el.classList.add('sel');
   ans.count = n;
+  // 人數改小時，原本選的寶寶椅數可能已不合理，一併清掉
+  if (ans.baby > n) resetBaby();
+}
+
+function resetBaby() {
+  ans.baby = 0;
+  const g = document.getElementById('babyGrid');
+  if (g) g.querySelectorAll('.tf-num').forEach(b => b.classList.remove('sel'));
+}
+
+function pickBaby(el, n) {
+  el.parentNode.querySelectorAll('.tf-num').forEach(b => b.classList.remove('sel'));
+  el.classList.add('sel');
+  ans.baby = n;
 }
 
 function goSkipDone() {
+  // side 已在 Q3 填答，保留下來以便統計未出席賓客屬於男方／女方
   ans.count = 0;
-  ans.side = '';
+  ans.baby = 0;
   ans.remark = '';
   submitForm();
 }
 
 function submitForm() {
   if (ans.attend !== '可惜無法出席' && !ans.count) { alert('請選擇人數'); return; }
+  if (ans.baby > ans.count) { alert('需要寶寶椅的人數不可超過出席人數喔'); return; }
   ans.name = document.getElementById('fName').value.trim();
   const isResubmit = localStorage.getItem('rsvp_resubmit') === '1';
   const photoInput = document.getElementById('fPhoto');
@@ -996,7 +1032,7 @@ function submitForm() {
     clearPhoto();
     document.querySelectorAll('.tf-opt.sel').forEach(o => o.classList.remove('sel'));
     document.querySelectorAll('.tf-num.sel').forEach(b => b.classList.remove('sel'));
-    Object.assign(ans, { name: '', phone: '', attend: '', side: '', count: 0, remark: '' });
+    Object.assign(ans, { name: '', phone: '', attend: '', side: '', count: 0, baby: 0, remark: '' });
   }
 
   if (photo) {
@@ -1005,7 +1041,7 @@ function submitForm() {
       const base64 = e.target.result.split(',')[1];
       const payload = JSON.stringify({
         name: ans.name, phone: ans.phone, attend: ans.attend,
-        count: ans.count, note: ans.side, remark: ans.remark,
+        count: ans.count, baby: ans.baby, note: ans.side, remark: ans.remark,
         photoBase64: base64, photoName: photo.name, photoType: photo.type,
         resubmit: isResubmit ? '是' : ''
       });
@@ -1015,7 +1051,7 @@ function submitForm() {
     reader.readAsDataURL(photo);
   } else {
     const cbName = 'cb_' + Date.now();
-    const params = new URLSearchParams({ callback: cbName, name: ans.name, phone: ans.phone, attend: ans.attend, count: ans.count, note: ans.side, remark: ans.remark, resubmit: isResubmit ? '是' : '' });
+    const params = new URLSearchParams({ callback: cbName, name: ans.name, phone: ans.phone, attend: ans.attend, count: ans.count, baby: ans.baby, note: ans.side, remark: ans.remark, resubmit: isResubmit ? '是' : '' });
     window[cbName] = function() { delete window[cbName]; };
     const s = document.createElement('script');
     s.src = SCRIPT_URL + '?' + params.toString();
@@ -1030,7 +1066,7 @@ function resubmitForm() {
   localStorage.removeItem('rsvp_submitted');
   document.getElementById('doneAlreadyText').style.display = 'none';
   document.getElementById('doneResubmitBtn').style.display = 'none';
-  Object.assign(ans, { name: '', phone: '', attend: '', side: '', count: 0, remark: '' });
+  Object.assign(ans, { name: '', phone: '', attend: '', side: '', count: 0, baby: 0, remark: '' });
   clearPhoto();
   showStep(1);
 }
