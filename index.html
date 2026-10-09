@@ -205,6 +205,17 @@ body.intro-lock { overflow: hidden; }
 .trans-title::before { content: '◆'; color: rgba(255,255,255,.55); font-size: 9px; }
 .trans-list  { padding-left: 16px; }
 .trans-list li { list-style: none; font-size: 13px; color: rgba(255,255,255,.92); line-height: 2.3; position: relative; }
+.map-pill    {
+  display: inline-flex; align-items: center; gap: 6px;
+  margin: 2px 0 8px; padding: 7px 14px 7px 11px;
+  border: 1px solid rgba(255,255,255,.42); border-radius: 20px;
+  color: #fff; text-decoration: none; font-size: 12px;
+  letter-spacing: .08em; line-height: 1;
+  transition: background .2s, border-color .2s, transform .15s;
+}
+.map-pill:hover  { background: rgba(255,255,255,.16); border-color: rgba(255,255,255,.75); }
+.map-pill:active { transform: scale(.97); }
+.map-pill svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 1.4; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
 .trans-list li.no-bullet::before { content: none; }
 .trans-list li::before { content: '・'; color: rgba(255,255,255,.5); position: absolute; left: -14px; }
 .map-box     { border-radius: 16px; overflow: hidden; height: 200px; margin-top: 24px; background: var(--txt-soft); }
@@ -641,7 +652,7 @@ footer   { background: var(--cream-lt); padding: 28px 28px; border-top: 1px soli
     </div>
 
     <div class="trans-item rv d2">
-      <div class="trans-title">火車</div>
+      <div class="trans-title">火車 / 高鐵</div>
       <ul class="trans-list">
         <li>板橋車站下車，步行約 5 分鐘</li>
       </ul>
@@ -660,6 +671,10 @@ footer   { background: var(--cream-lt); padding: 28px 28px; border-top: 1px soli
       <ul class="trans-list">
         <li>市民廣場地下停車場・歐特儀（每小時 40 元）<span style="margin-left:6px;background:var(--br-light);color:#fff;font-size:10px;padding:2px 7px;border-radius:10px;vertical-align:middle;letter-spacing:1px;white-space:nowrap">館內特約</span>
           <div style="margin-top:2px;margin-bottom:6px;font-size:12px;line-height:1.8;color:#fff;background:rgba(255,255,255,.1);border-left:2px solid var(--br-light);border-radius:0 6px 6px 0;padding:6px 10px">🎁 婚宴賓客停此停車場可享 <b>3 小時停車優惠</b><br><span style="color:rgba(255,255,255,.8)">請於入席時向現場服務人員索取</span></div>
+          <a class="map-pill" href="https://maps.app.goo.gl/e7HqQA3eCN56UPzv6" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24"><path d="M12 21.2s7-6.1 7-11.2a7 7 0 1 0-14 0c0 5.1 7 11.2 7 11.2z"/><circle cx="12" cy="10" r="2.6"/></svg>
+            <span>開啟導航</span>
+          </a>
         </li>
         <li>板橋火車站地下停車場（每小時 40 元）</li>
         <li>特專三停車場（每小時 30 元）</li>
@@ -704,7 +719,7 @@ footer   { background: var(--cream-lt); padding: 28px 28px; border-top: 1px soli
     <div class="tf-step on" id="s1">
       <div class="tf-q-num">1 / 8</div>
       <div class="tf-q-text">您的中文大名 *</div>
-      <input class="tf-input" id="fName" type="text" placeholder="Type your answer here..">
+      <input class="tf-input" id="fName" type="text" placeholder="請輸入您的姓名">
       <button class="tf-ok" onclick="goNext(2)">OK ✓</button>
     </div>
 
